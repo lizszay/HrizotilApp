@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace HrizotilApp.Models;
+﻿namespace HrizotilApp.Models;
 
 public partial class Product
 {

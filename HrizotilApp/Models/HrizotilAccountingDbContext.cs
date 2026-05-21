@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using HrizotilApp.Models;
+﻿using HrizotilApp.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace HrizotilApp;
@@ -162,17 +160,17 @@ public partial class HrizotilAccountingDbContext : DbContext
                 .HasPrecision(8, 1)
                 .HasColumnName("quantity");
 
-            entity.HasOne(d => d.IdFromWarehouseNavigation).WithMany(p => p.ShipmentIdFromWarehouseNavigations)
+            entity.HasOne(d => d.FromWarehouse).WithMany(p => p.ShipmentIdFromWarehouseNavigations)
                 .HasForeignKey(d => d.IdFromWarehouse)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("shipments_id_from_warehouse_fkey");
 
-            entity.HasOne(d => d.IdProductNavigation).WithMany(p => p.Shipments)
+            entity.HasOne(d => d.Product).WithMany(p => p.Shipments)
                 .HasForeignKey(d => d.IdProduct)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("shipments_id_product_fkey");
 
-            entity.HasOne(d => d.IdToWarehouseNavigation).WithMany(p => p.ShipmentIdToWarehouseNavigations)
+            entity.HasOne(d => d.ToWarehouse).WithMany(p => p.ShipmentIdToWarehouseNavigations)
                 .HasForeignKey(d => d.IdToWarehouse)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("shipments_id_to_warehouse_fkey");
@@ -192,7 +190,7 @@ public partial class HrizotilAccountingDbContext : DbContext
             entity.Property(e => e.Login).HasColumnName("login");
             entity.Property(e => e.Password).HasColumnName("password");
 
-            entity.HasOne(d => d.IdRoleNavigation).WithMany(p => p.Users)
+            entity.HasOne(d => d.Role).WithMany(p => p.Users)
                 .HasForeignKey(d => d.IdRole)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("users_id_role_fkey");
