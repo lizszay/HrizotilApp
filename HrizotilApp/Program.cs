@@ -21,12 +21,13 @@ namespace HrizotilApp
 
                     if (loginForm.IsGuest)
                     {
+                        // Гость ? только информация
                         Application.Run(new FormInfo(loginForm.CurrentUser, true));
                     }
                     else
                     {
                         // Авторизованный пользователь ? главное меню
-                        Application.Run(new FormInfo(loginForm.CurrentUser, false));
+                        Application.Run(new FormMenu(loginForm.CurrentUser, false));
                     }
                 }
             }
