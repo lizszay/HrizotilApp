@@ -11,9 +11,12 @@ namespace HrizotilApp.Forms
         {
             InitializeComponent();
             currentUser = user;
-            LoadData();
 
-            dgvData.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(240, 240, 240);
+            if (!DesignMode)
+            {
+                LoadData();
+                dgvData.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(240, 240, 240);
+            }
         }
 
         private void LoadData()
@@ -33,20 +36,16 @@ namespace HrizotilApp.Forms
                     .ToList();
 
                 dgvData.DataSource = users;
-                SetupColumns();
-            }
-        }
 
-        private void SetupColumns()
-        {
-            if (dgvData.Columns.Contains("Id"))
-                dgvData.Columns["Id"].HeaderText = "ID";
-            if (dgvData.Columns.Contains("Login"))
-                dgvData.Columns["Login"].HeaderText = "Логин";
-            if (dgvData.Columns.Contains("FullName"))
-                dgvData.Columns["FullName"].HeaderText = "ФИО";
-            if (dgvData.Columns.Contains("RoleName"))
-                dgvData.Columns["RoleName"].HeaderText = "Роль";
+                if (dgvData.Columns.Contains("Id"))
+                    dgvData.Columns["Id"].HeaderText = "ID";
+                if (dgvData.Columns.Contains("Login"))
+                    dgvData.Columns["Login"].HeaderText = "Логин";
+                if (dgvData.Columns.Contains("FullName"))
+                    dgvData.Columns["FullName"].HeaderText = "ФИО";
+                if (dgvData.Columns.Contains("RoleName"))
+                    dgvData.Columns["RoleName"].HeaderText = "Роль";
+            }
         }
 
         private void BtnAdd_Click(object sender, EventArgs e)

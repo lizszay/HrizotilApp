@@ -1,8 +1,4 @@
-﻿using System.Windows.Forms;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
-
-namespace HrizotilApp.Forms
+﻿namespace HrizotilApp.Forms
 {
     partial class FormUsers
     {
@@ -64,6 +60,7 @@ namespace HrizotilApp.Forms
             btnBack.Location = new Point(10, 5);
             btnBack.Size = new Size(100, 38);
             btnBack.Text = "← Назад";
+            btnBack.UseVisualStyleBackColor = false;
             btnBack.Click += BtnBack_Click;
 
             lblUserName.Dock = DockStyle.Right;
@@ -71,6 +68,7 @@ namespace HrizotilApp.Forms
             lblUserName.Location = new Point(700, 5);
             lblUserName.Size = new Size(180, 38);
             lblUserName.TextAlign = ContentAlignment.MiddleRight;
+            lblUserName.Text = "Имя";
 
             btnLogout.BackColor = Color.YellowGreen;
             btnLogout.Dock = DockStyle.Right;
@@ -79,6 +77,7 @@ namespace HrizotilApp.Forms
             btnLogout.Location = new Point(880, 5);
             btnLogout.Size = new Size(100, 38);
             btnLogout.Text = "Выход";
+            btnLogout.UseVisualStyleBackColor = false;
             btnLogout.Click += BtnLogout_Click;
 
             lblTitle.Dock = DockStyle.Fill;
@@ -101,6 +100,7 @@ namespace HrizotilApp.Forms
             btnAdd.Location = new Point(270, 8);
             btnAdd.Size = new Size(120, 38);
             btnAdd.Text = "➕ Добавить";
+            btnAdd.UseVisualStyleBackColor = false;
             btnAdd.Click += BtnAdd_Click;
 
             btnEdit.BackColor = Color.LightBlue;
@@ -109,6 +109,7 @@ namespace HrizotilApp.Forms
             btnEdit.Location = new Point(410, 8);
             btnEdit.Size = new Size(120, 38);
             btnEdit.Text = "✏️ Редактировать";
+            btnEdit.UseVisualStyleBackColor = false;
             btnEdit.Click += BtnEdit_Click;
 
             btnDelete.BackColor = Color.LightCoral;
@@ -117,6 +118,7 @@ namespace HrizotilApp.Forms
             btnDelete.Location = new Point(550, 8);
             btnDelete.Size = new Size(120, 38);
             btnDelete.Text = "🗑️ Удалить";
+            btnDelete.UseVisualStyleBackColor = false;
             btnDelete.Click += BtnDelete_Click;
 
             // dgvData
@@ -142,8 +144,9 @@ namespace HrizotilApp.Forms
             Name = "FormUsers";
 
             panelTop.ResumeLayout(false);
+            panelTop.PerformLayout();
             panelButtons.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dgvData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvData).EndInit();
             ResumeLayout(false);
         }
     }
