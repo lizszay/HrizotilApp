@@ -13,7 +13,7 @@ public partial class Remain
 
     public DateOnly DateStock { get; set; }
 
-    public virtual Product IdProductNavigation { get; set; } = null!;
+    public virtual Product Product { get; set; } = null!;
 
-    public virtual Warehouse IdWarehouseNavigation { get; set; } = null!;
+    public virtual Warehouse Warehouse { get; set; } = null!;
 }

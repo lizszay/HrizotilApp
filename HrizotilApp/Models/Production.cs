@@ -17,5 +17,5 @@ public partial class Production
 
     public decimal FactQuantity { get; set; }
 
-    public virtual Product IdProductNavigation { get; set; } = null!;
+    public virtual Product Product { get; set; } = null!;
 }

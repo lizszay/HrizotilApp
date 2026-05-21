@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using HrizotilApp.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace HrizotilApp.Models;
+namespace HrizotilApp;
 
 public partial class HrizotilAccountingDbContext : DbContext
 {
@@ -64,7 +65,7 @@ public partial class HrizotilAccountingDbContext : DbContext
             entity.Property(e => e.NormPk075mmMax).HasColumnName("norm_pk_075mm_max");
             entity.Property(e => e.NormSieve135mmMin).HasColumnName("norm_sieve_135mm_min");
 
-            entity.HasOne(d => d.IdGroupNavigation).WithMany(p => p.Products)
+            entity.HasOne(d => d.Group).WithMany(p => p.Products)
                 .HasForeignKey(d => d.IdGroup)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("products_id_group_fkey");
@@ -85,7 +86,7 @@ public partial class HrizotilAccountingDbContext : DbContext
             entity.Property(e => e.PlanQuantity).HasColumnName("plan_quantity");
             entity.Property(e => e.Shift).HasColumnName("shift");
 
-            entity.HasOne(d => d.IdProductNavigation).WithMany(p => p.Productions)
+            entity.HasOne(d => d.Product).WithMany(p => p.Productions)
                 .HasForeignKey(d => d.IdProduct)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("productions_id_product_fkey");
@@ -104,7 +105,7 @@ public partial class HrizotilAccountingDbContext : DbContext
             entity.Property(e => e.Pk075mm).HasColumnName("pk_075mm");
             entity.Property(e => e.Sieve135mm).HasColumnName("sieve_135mm");
 
-            entity.HasOne(d => d.IdProductNavigation).WithMany(p => p.Qualities)
+            entity.HasOne(d => d.Product).WithMany(p => p.Qualities)
                 .HasForeignKey(d => d.IdProduct)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("qualities_id_product_fkey");
@@ -123,12 +124,12 @@ public partial class HrizotilAccountingDbContext : DbContext
                 .HasPrecision(8, 1)
                 .HasColumnName("quantity");
 
-            entity.HasOne(d => d.IdProductNavigation).WithMany(p => p.Remains)
+            entity.HasOne(d => d.Product).WithMany(p => p.Remains)
                 .HasForeignKey(d => d.IdProduct)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("remains_id_product_fkey");
 
-            entity.HasOne(d => d.IdWarehouseNavigation).WithMany(p => p.Remains)
+            entity.HasOne(d => d.Warehouse).WithMany(p => p.Remains)
                 .HasForeignKey(d => d.IdWarehouse)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("remains_id_warehouse_fkey");

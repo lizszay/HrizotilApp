@@ -17,5 +17,5 @@ public partial class Quality
 
     public int? Pk075mm { get; set; }
 
-    public virtual Product IdProductNavigation { get; set; } = null!;
+    public virtual Product Product { get; set; } = null!;
 }

@@ -17,7 +17,7 @@ public partial class Product
 
     public int? BulkDensityTarget { get; set; }
 
-    public virtual Group IdGroupNavigation { get; set; } = null!;
+    public virtual Group Group { get; set; } = null!;
 
     public virtual ICollection<Production> Productions { get; set; } = new List<Production>();
 

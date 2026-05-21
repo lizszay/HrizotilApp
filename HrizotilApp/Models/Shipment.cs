@@ -17,9 +17,9 @@ public partial class Shipment
 
     public decimal Quantity { get; set; }
 
-    public virtual Warehouse IdFromWarehouseNavigation { get; set; } = null!;
+    public virtual Warehouse FromWarehouse { get; set; } = null!;
 
-    public virtual Product IdProductNavigation { get; set; } = null!;
+    public virtual Product Product { get; set; } = null!;
 
-    public virtual Warehouse IdToWarehouseNavigation { get; set; } = null!;
+    public virtual Warehouse ToWarehouse { get; set; } = null!;
 }
