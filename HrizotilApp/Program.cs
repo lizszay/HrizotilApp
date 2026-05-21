@@ -1,17 +1,34 @@
+
+using HrizotilApp.Models;
+
 namespace HrizotilApp
 {
     internal static class Program
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            while (true)
+            {
+                using (var loginForm = new FormLogin())
+                {
+                    if (loginForm.ShowDialog() != DialogResult.OK)
+                    {
+                        return; // Закрытие приложения
+                    }
+
+                    if (loginForm.IsGuest)
+                    {
+                        Application.Run(new FormInfo(loginForm.CurrentUser, true));
+                    }
+                    else
+                    {
+                    }
+                }
+            }
         }
     }
 }
