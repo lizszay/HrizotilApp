@@ -1,4 +1,3 @@
-
 using HrizotilApp.Models;
 
 namespace HrizotilApp
@@ -26,6 +25,8 @@ namespace HrizotilApp
                     }
                     else
                     {
+                        // јвторизованный пользователь ? главное меню
+                        Application.Run(new FormInfo(loginForm.CurrentUser, false));
                     }
                 }
             }

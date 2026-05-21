@@ -67,11 +67,11 @@
             // 
             // btnGuest
             // 
-            btnGuest.BackColor = Color.DarkSlateGray;
+            btnGuest.BackColor = Color.Khaki;
             btnGuest.FlatAppearance.BorderSize = 0;
             btnGuest.FlatStyle = FlatStyle.Flat;
             btnGuest.Font = new Font("Times New Roman", 12F);
-            btnGuest.ForeColor = Color.White;
+            btnGuest.ForeColor = Color.Black;
             btnGuest.Location = new Point(103, 176);
             btnGuest.Name = "btnGuest";
             btnGuest.Size = new Size(150, 23);
@@ -82,11 +82,11 @@
             // 
             // btnLogin
             // 
-            btnLogin.BackColor = Color.OliveDrab;
+            btnLogin.BackColor = Color.YellowGreen;
             btnLogin.FlatAppearance.BorderSize = 0;
             btnLogin.FlatStyle = FlatStyle.Flat;
             btnLogin.Font = new Font("Times New Roman", 12F);
-            btnLogin.ForeColor = Color.White;
+            btnLogin.ForeColor = Color.Black;
             btnLogin.Location = new Point(103, 145);
             btnLogin.Name = "btnLogin";
             btnLogin.Size = new Size(150, 23);
@@ -139,6 +139,8 @@
             Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Margin = new Padding(4);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "FormLogin";
             Padding = new Padding(10, 11, 10, 11);
             StartPosition = FormStartPosition.CenterScreen;

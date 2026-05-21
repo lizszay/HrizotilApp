@@ -2,120 +2,284 @@
 {
     partial class FormInfo
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        private Panel panelTop;
+        private Button btnBack;
+        private Button btnLogout;
+        private Label lblUserName;
+
+        private Panel panelDescription;
+        private TextBox txtDescription;
+        private Button btnEditDesc;
+        private Button btnSaveDesc;
+        private Button btnCancelDesc;
+
+        private Panel panelButtons;
+        private Button btnAdd;
+        private Button btnEdit;
+        private Button btnDelete;
+
+        private DataGridView dgvProducts;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
-            {
                 components.Dispose();
-            }
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
-            label1 = new Label();
-            dataGridView1 = new DataGridView();
-            panel1 = new Panel();
-            btnLogin = new Button();
-            btnCurrentUser = new Button();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
-            panel1.SuspendLayout();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormInfo));
+            panelTop = new Panel();
+            btnBack = new Button();
+            lblUserName = new Label();
+            btnLogout = new Button();
+            panelDescription = new Panel();
+            txtDescription = new TextBox();
+            btnEditDesc = new Button();
+            btnSaveDesc = new Button();
+            btnCancelDesc = new Button();
+            panelButtons = new Panel();
+            btnAdd = new Button();
+            btnEdit = new Button();
+            btnDelete = new Button();
+            dgvProducts = new DataGridView();
+            panelTop.SuspendLayout();
+            panelDescription.SuspendLayout();
+            panelButtons.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvProducts).BeginInit();
             SuspendLayout();
             // 
-            // label1
+            // panelTop
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(262, 75);
-            label1.Name = "label1";
-            label1.Size = new Size(494, 19);
-            label1.TabIndex = 0;
-            label1.Text = "Автоматизированная система учёта Цеха обогащения ПАО \"Ураласбест";
+            panelTop.BackColor = Color.White;
+            panelTop.Controls.Add(btnBack);
+            panelTop.Controls.Add(lblUserName);
+            panelTop.Controls.Add(btnLogout);
+            panelTop.Dock = DockStyle.Top;
+            panelTop.Location = new Point(13, 11);
+            panelTop.Margin = new Padding(4, 3, 4, 3);
+            panelTop.Name = "panelTop";
+            panelTop.Padding = new Padding(13, 6, 13, 6);
+            panelTop.Size = new Size(958, 50);
+            panelTop.TabIndex = 3;
             // 
-            // dataGridView1
+            // btnBack
             // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(12, 113);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(1005, 445);
-            dataGridView1.TabIndex = 1;
+            btnBack.BackColor = Color.Khaki;
+            btnBack.FlatAppearance.BorderSize = 0;
+            btnBack.FlatStyle = FlatStyle.Flat;
+            btnBack.Font = new Font("Times New Roman", 12F);
+            btnBack.Location = new Point(13, 6);
+            btnBack.Margin = new Padding(4, 3, 4, 3);
+            btnBack.Name = "btnBack";
+            btnBack.Size = new Size(129, 39);
+            btnBack.TabIndex = 0;
+            btnBack.Text = "← Назад";
+            btnBack.UseVisualStyleBackColor = false;
+            btnBack.Click += BtnBack_Click;
             // 
-            // panel1
+            // lblUserName
             // 
-            panel1.Controls.Add(btnCurrentUser);
-            panel1.Controls.Add(btnLogin);
-            panel1.Dock = DockStyle.Top;
-            panel1.Location = new Point(0, 0);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(1029, 58);
-            panel1.TabIndex = 3;
+            lblUserName.Dock = DockStyle.Right;
+            lblUserName.Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            lblUserName.Location = new Point(641, 6);
+            lblUserName.Margin = new Padding(4, 0, 4, 0);
+            lblUserName.Name = "lblUserName";
+            lblUserName.Size = new Size(175, 38);
+            lblUserName.TabIndex = 1;
+            lblUserName.Text = "имя";
+            lblUserName.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // btnLogin
+            // btnLogout
             // 
-            btnLogin.BackColor = Color.OliveDrab;
-            btnLogin.FlatAppearance.BorderSize = 0;
-            btnLogin.FlatStyle = FlatStyle.Flat;
-            btnLogin.Font = new Font("Times New Roman", 12F);
-            btnLogin.ForeColor = Color.White;
-            btnLogin.Location = new Point(12, 12);
-            btnLogin.Name = "btnLogin";
-            btnLogin.Size = new Size(97, 23);
-            btnLogin.TabIndex = 5;
-            btnLogin.Text = "Выйти";
-            btnLogin.UseVisualStyleBackColor = false;
+            btnLogout.BackColor = Color.YellowGreen;
+            btnLogout.Dock = DockStyle.Right;
+            btnLogout.FlatAppearance.BorderSize = 0;
+            btnLogout.FlatStyle = FlatStyle.Flat;
+            btnLogout.Font = new Font("Times New Roman", 12F);
+            btnLogout.Location = new Point(816, 6);
+            btnLogout.Margin = new Padding(4, 3, 4, 3);
+            btnLogout.Name = "btnLogout";
+            btnLogout.Size = new Size(129, 38);
+            btnLogout.TabIndex = 2;
+            btnLogout.Text = "Выход";
+            btnLogout.UseVisualStyleBackColor = false;
+            btnLogout.Click += BtnLogout_Click;
             // 
-            // btnCurrentUser
+            // panelDescription
             // 
-            btnCurrentUser.BackColor = Color.OliveDrab;
-            btnCurrentUser.FlatAppearance.BorderSize = 0;
-            btnCurrentUser.FlatStyle = FlatStyle.Flat;
-            btnCurrentUser.Font = new Font("Times New Roman", 12F);
-            btnCurrentUser.ForeColor = Color.White;
-            btnCurrentUser.Location = new Point(904, 12);
-            btnCurrentUser.Name = "btnCurrentUser";
-            btnCurrentUser.Size = new Size(97, 23);
-            btnCurrentUser.TabIndex = 6;
-            btnCurrentUser.Text = "Гость";
-            btnCurrentUser.UseVisualStyleBackColor = false;
+            panelDescription.BackColor = Color.WhiteSmoke;
+            panelDescription.Controls.Add(txtDescription);
+            panelDescription.Controls.Add(btnEditDesc);
+            panelDescription.Controls.Add(btnSaveDesc);
+            panelDescription.Controls.Add(btnCancelDesc);
+            panelDescription.Dock = DockStyle.Top;
+            panelDescription.Location = new Point(13, 61);
+            panelDescription.Margin = new Padding(4, 3, 4, 3);
+            panelDescription.Name = "panelDescription";
+            panelDescription.Padding = new Padding(13, 6, 13, 6);
+            panelDescription.Size = new Size(958, 145);
+            panelDescription.TabIndex = 2;
+            // 
+            // txtDescription
+            // 
+            txtDescription.BackColor = Color.WhiteSmoke;
+            txtDescription.BorderStyle = BorderStyle.FixedSingle;
+            txtDescription.Dock = DockStyle.Fill;
+            txtDescription.Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            txtDescription.Location = new Point(13, 6);
+            txtDescription.Margin = new Padding(4, 3, 4, 3);
+            txtDescription.Multiline = true;
+            txtDescription.Name = "txtDescription";
+            txtDescription.ReadOnly = true;
+            txtDescription.ScrollBars = ScrollBars.Vertical;
+            txtDescription.Size = new Size(932, 133);
+            txtDescription.TabIndex = 0;
+            txtDescription.Text = resources.GetString("txtDescription.Text");
+            // 
+            // btnEditDesc
+            // 
+            btnEditDesc.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnEditDesc.BackColor = Color.LightBlue;
+            btnEditDesc.FlatStyle = FlatStyle.Flat;
+            btnEditDesc.Location = new Point(1807, 101);
+            btnEditDesc.Margin = new Padding(4, 3, 4, 3);
+            btnEditDesc.Name = "btnEditDesc";
+            btnEditDesc.Size = new Size(154, 34);
+            btnEditDesc.TabIndex = 1;
+            btnEditDesc.Text = "✎ Редактировать";
+            btnEditDesc.UseVisualStyleBackColor = false;
+            btnEditDesc.Visible = false;
+            btnEditDesc.Click += BtnEditDesc_Click;
+            // 
+            // btnSaveDesc
+            // 
+            btnSaveDesc.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnSaveDesc.BackColor = Color.LightGreen;
+            btnSaveDesc.FlatStyle = FlatStyle.Flat;
+            btnSaveDesc.Location = new Point(1807, 101);
+            btnSaveDesc.Margin = new Padding(4, 3, 4, 3);
+            btnSaveDesc.Name = "btnSaveDesc";
+            btnSaveDesc.Size = new Size(129, 34);
+            btnSaveDesc.TabIndex = 2;
+            btnSaveDesc.Text = "✓ Сохранить";
+            btnSaveDesc.UseVisualStyleBackColor = false;
+            btnSaveDesc.Visible = false;
+            btnSaveDesc.Click += BtnSaveDesc_Click;
+            // 
+            // btnCancelDesc
+            // 
+            btnCancelDesc.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnCancelDesc.BackColor = Color.LightCoral;
+            btnCancelDesc.FlatStyle = FlatStyle.Flat;
+            btnCancelDesc.Location = new Point(1665, 101);
+            btnCancelDesc.Margin = new Padding(4, 3, 4, 3);
+            btnCancelDesc.Name = "btnCancelDesc";
+            btnCancelDesc.Size = new Size(129, 34);
+            btnCancelDesc.TabIndex = 3;
+            btnCancelDesc.Text = "✖ Отменить";
+            btnCancelDesc.UseVisualStyleBackColor = false;
+            btnCancelDesc.Visible = false;
+            btnCancelDesc.Click += BtnCancelDesc_Click;
+            // 
+            // panelButtons
+            // 
+            panelButtons.BackColor = Color.White;
+            panelButtons.Controls.Add(btnAdd);
+            panelButtons.Controls.Add(btnEdit);
+            panelButtons.Controls.Add(btnDelete);
+            panelButtons.Dock = DockStyle.Top;
+            panelButtons.Location = new Point(13, 206);
+            panelButtons.Margin = new Padding(4, 3, 4, 3);
+            panelButtons.Name = "panelButtons";
+            panelButtons.Size = new Size(958, 56);
+            panelButtons.TabIndex = 1;
+            // 
+            // btnAdd
+            // 
+            btnAdd.BackColor = Color.LightGreen;
+            btnAdd.FlatAppearance.BorderSize = 0;
+            btnAdd.FlatStyle = FlatStyle.Flat;
+            btnAdd.Location = new Point(222, 9);
+            btnAdd.Margin = new Padding(4, 3, 4, 3);
+            btnAdd.Name = "btnAdd";
+            btnAdd.Size = new Size(154, 39);
+            btnAdd.TabIndex = 0;
+            btnAdd.Text = "➕ Добавить";
+            btnAdd.UseVisualStyleBackColor = false;
+            btnAdd.Click += BtnAdd_Click;
+            // 
+            // btnEdit
+            // 
+            btnEdit.BackColor = Color.LightBlue;
+            btnEdit.FlatAppearance.BorderSize = 0;
+            btnEdit.FlatStyle = FlatStyle.Flat;
+            btnEdit.Location = new Point(389, 9);
+            btnEdit.Margin = new Padding(4, 3, 4, 3);
+            btnEdit.Name = "btnEdit";
+            btnEdit.Size = new Size(180, 39);
+            btnEdit.TabIndex = 1;
+            btnEdit.Text = "✏️ Редактировать";
+            btnEdit.UseVisualStyleBackColor = false;
+            btnEdit.Click += BtnEdit_Click;
+            // 
+            // btnDelete
+            // 
+            btnDelete.BackColor = Color.LightCoral;
+            btnDelete.FlatAppearance.BorderSize = 0;
+            btnDelete.FlatStyle = FlatStyle.Flat;
+            btnDelete.Location = new Point(582, 9);
+            btnDelete.Margin = new Padding(4, 3, 4, 3);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(154, 39);
+            btnDelete.TabIndex = 2;
+            btnDelete.Text = "🗑️ Удалить";
+            btnDelete.UseVisualStyleBackColor = false;
+            btnDelete.Click += BtnDelete_Click;
+            // 
+            // dgvProducts
+            // 
+            dgvProducts.AllowUserToAddRows = false;
+            dgvProducts.AllowUserToResizeColumns = false;
+            dgvProducts.AllowUserToResizeRows = false;
+            dgvProducts.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dgvProducts.BackgroundColor = Color.White;
+            dgvProducts.Dock = DockStyle.Fill;
+            dgvProducts.Location = new Point(13, 262);
+            dgvProducts.Margin = new Padding(4, 3, 4, 3);
+            dgvProducts.MultiSelect = false;
+            dgvProducts.Name = "dgvProducts";
+            dgvProducts.ReadOnly = true;
+            dgvProducts.RowHeadersVisible = false;
+            dgvProducts.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvProducts.Size = new Size(958, 488);
+            dgvProducts.TabIndex = 0;
             // 
             // FormInfo
             // 
-            AutoScaleDimensions = new SizeF(9F, 19F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1029, 570);
-            Controls.Add(panel1);
-            Controls.Add(dataGridView1);
-            Controls.Add(label1);
-            Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            Margin = new Padding(4, 4, 4, 4);
-            Name = "FormInfo";
-            Text = "FormInfo";
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
-            panel1.ResumeLayout(false);
+            this.AutoScaleDimensions = new SizeF(9F, 19F);
+            this.AutoScaleMode = AutoScaleMode.Font;
+            this.BackColor = Color.White;
+            this.ClientSize = new Size(984, 761);
+            this.Controls.Add(this.dgvProducts);
+            this.Controls.Add(this.panelButtons);
+            this.Controls.Add(this.panelDescription);
+            this.Controls.Add(this.panelTop);
+            this.Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            this.Margin = new Padding(4, 3, 4, 3);
+            this.Name = "FormInfo";
+            this.Padding = new Padding(0);           // ← убрали отступы
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.Text = "Информация о системе";
+            panelTop.ResumeLayout(false);
+            panelDescription.ResumeLayout(false);
+            panelDescription.PerformLayout();
+            panelButtons.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvProducts).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
-
-        #endregion
-
-        private Label label1;
-        private DataGridView dataGridView1;
-        private Panel panel1;
-        private Button btnCurrentUser;
-        private Button btnLogin;
     }
 }
