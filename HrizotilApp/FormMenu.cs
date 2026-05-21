@@ -1,4 +1,5 @@
 ﻿using HrizotilApp.Models;
+using HrizotilApp.Forms;
 
 namespace HrizotilApp
 {
@@ -18,13 +19,11 @@ namespace HrizotilApp
 
         private void ConfigureMenu()
         {
-            // Отображение имени пользователя
             if (currentUser != null)
                 lblUserName.Text = currentUser.FullName;
             else
                 lblUserName.Text = "Гость";
 
-            // Кнопки для админа
             btnProducts.Visible = isAdmin;
             btnUsers.Visible = isAdmin;
         }
@@ -32,6 +31,45 @@ namespace HrizotilApp
         private void BtnInfo_Click(object sender, EventArgs e)
         {
             var form = new FormInfo(currentUser, false);
+            form.ShowDialog();
+        }
+
+        private void BtnProductions_Click(object sender, EventArgs e)
+        {
+            bool readOnly = (currentUser.IdRole != 2 && currentUser.IdRole != 5);
+            var form = new FormProductions(currentUser, readOnly);
+            form.ShowDialog();
+        }
+
+        private void BtnQuality_Click(object sender, EventArgs e)
+        {
+            bool readOnly = (currentUser.IdRole != 1 && currentUser.IdRole != 5);
+            var form = new FormQuality(currentUser, readOnly);
+            form.ShowDialog();
+        }
+
+        private void BtnShipments_Click(object sender, EventArgs e)
+        {
+            bool readOnly = (currentUser.IdRole != 3 && currentUser.IdRole != 5);
+            var form = new FormShipments(currentUser, readOnly);
+            form.ShowDialog();
+        }
+
+        private void BtnStocks_Click(object sender, EventArgs e)
+        {
+            var form = new FormStocks();
+            form.ShowDialog();
+        }
+
+        private void BtnProducts_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Управление марками будет добавлено позже", "В разработке");
+        }
+
+        private void BtnUsers_Click(object sender, EventArgs e)
+        {
+            if (!isAdmin) return;
+            var form = new FormUsers(currentUser);
             form.ShowDialog();
         }
 
