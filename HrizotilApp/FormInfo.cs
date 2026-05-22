@@ -18,6 +18,7 @@ namespace HrizotilApp
 
             ConfigureUI();
             LoadProducts();
+            DataGridViewStyle.ApplyStyle(dgvProducts);
         }
 
         private void ConfigureUI()
@@ -29,10 +30,49 @@ namespace HrizotilApp
             else
                 lblUserName.Text = "Не авторизован";
 
-            btnAdd.Visible = isAdmin;
-            btnEdit.Visible = isAdmin;
-            btnDelete.Visible = isAdmin;
-            btnEditDesc.Visible = isAdmin;
+            int userRole = currentUser?.IdRole ?? 1;
+
+            // Только админ может редактировать описание
+            btnEditDesc.Visible = (userRole == 5); // Админ - роль 5
+
+            // Кнопка "Назад" видна для всех (кроме гостя, у которого нет меню)
+            btnBack.Visible = !isGuest;
+
+            // Кнопки редактирования марок скрыты для всех
+            btnAdd.Visible = false;
+            btnEdit.Visible = false;
+            btnDelete.Visible = false;
+        }
+
+        private void SetupDataGridViewStyle()
+        {
+            dgvProducts.BackgroundColor = Color.White;
+            dgvProducts.BorderStyle = BorderStyle.None;
+            dgvProducts.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgvProducts.GridColor = Color.FromArgb(230, 230, 230);
+            dgvProducts.RowHeadersVisible = false;
+            dgvProducts.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvProducts.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvProducts.AllowUserToResizeRows = false;
+            dgvProducts.RowTemplate.Height = 35;
+
+            // Стиль заголовков
+            dgvProducts.EnableHeadersVisualStyles = false;
+            dgvProducts.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(52, 73, 94);
+            dgvProducts.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgvProducts.ColumnHeadersDefaultCellStyle.Font = new Font("Times New Roman", 12F, FontStyle.Bold);
+            dgvProducts.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvProducts.ColumnHeadersHeight = 40;
+
+            // Стиль ячеек
+            dgvProducts.DefaultCellStyle.Font = new Font("Times New Roman", 11F);
+            dgvProducts.DefaultCellStyle.ForeColor = Color.FromArgb(64, 64, 64);
+            dgvProducts.DefaultCellStyle.SelectionBackColor = Color.FromArgb(52, 152, 219);
+            dgvProducts.DefaultCellStyle.SelectionForeColor = Color.White;
+            dgvProducts.DefaultCellStyle.Padding = new Padding(5, 0, 5, 0);
+
+            // Чередующиеся строки
+            dgvProducts.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 248, 248);
         }
 
         private void LoadProducts()
@@ -47,39 +87,86 @@ namespace HrizotilApp
                     {
                         Группа = p.Group.GroupName,
                         Номенклатура = p.Id,
-                        Сито = p.NormSieve135mmMin != null ? $"{p.NormSieve135mmMin}%" : "-",
-                        Пыль = p.NormDustMax != null ? $"{p.NormDustMax}%" : "-",
-                        ПК = p.NormPk075mmMax != null ? $"{p.NormPk075mmMax}%" : "-",
-                        Плотность = p.BulkDensityTarget != null ? $"{p.BulkDensityTarget} г/дм³" : "-"
+                        Сито = p.NormSieve135mmMin != null ? $"{p.NormSieve135mmMin}%" : "—",
+                        Пыль = p.NormDustMax != null ? $"{p.NormDustMax}%" : "—",
+                        ПК = p.NormPk075mmMax != null ? $"{p.NormPk075mmMax}%" : "—",
+                        Плотность = p.BulkDensityTarget != null ? $"{p.BulkDensityTarget} г/дм³" : "—"
                     })
                     .ToList();
 
                 dgvProducts.DataSource = products;
 
-                if (dgvProducts.Columns.Contains("Сито"))
-                    dgvProducts.Columns["Сито"].HeaderText = "Сито (↑ лучше)";
-
-                if (dgvProducts.Columns.Contains("Пыль"))
-                    dgvProducts.Columns["Пыль"].HeaderText = "Пыль (↓ лучше)";
-
-                if (dgvProducts.Columns.Contains("ПК"))
-                    dgvProducts.Columns["ПК"].HeaderText = "ПК (↓ лучше)";
-
+                // Настройка заголовков и выравнивания
                 if (dgvProducts.Columns.Contains("Группа"))
-                    dgvProducts.Columns["Группа"].DisplayIndex = 0;
+                {
+                    dgvProducts.Columns["Группа"].HeaderText = "Группа";
+                    dgvProducts.Columns["Группа"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                }
 
                 if (dgvProducts.Columns.Contains("Номенклатура"))
-                    dgvProducts.Columns["Номенклатура"].DisplayIndex = 1;
+                {
+                    dgvProducts.Columns["Номенклатура"].HeaderText = "Марка";
+                    dgvProducts.Columns["Номенклатура"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                    dgvProducts.Columns["Номенклатура"].DefaultCellStyle.Font = new Font("Times New Roman", 11F, FontStyle.Bold);
+                }
 
+                if (dgvProducts.Columns.Contains("Сито"))
+                {
+                    dgvProducts.Columns["Сито"].HeaderText = "Сито (↑ лучше)";
+                    dgvProducts.Columns["Сито"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                }
+
+                if (dgvProducts.Columns.Contains("Пыль"))
+                {
+                    dgvProducts.Columns["Пыль"].HeaderText = "Пыль (↓ лучше)";
+                    dgvProducts.Columns["Пыль"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                }
+
+                if (dgvProducts.Columns.Contains("ПК"))
+                {
+                    dgvProducts.Columns["ПК"].HeaderText = "ПК (↓ лучше)";
+                    dgvProducts.Columns["ПК"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                }
+
+                if (dgvProducts.Columns.Contains("Плотность"))
+                {
+                    dgvProducts.Columns["Плотность"].HeaderText = "Плотность";
+                    dgvProducts.Columns["Плотность"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                }
+
+                // Применяем стили к строкам
                 foreach (DataGridViewRow row in dgvProducts.Rows)
                 {
                     string сито = row.Cells["Сито"].Value?.ToString() ?? "";
                     string пыль = row.Cells["Пыль"].Value?.ToString() ?? "";
                     string пк = row.Cells["ПК"].Value?.ToString() ?? "";
 
-                    if (сито == "-" && пыль == "-" && пк == "-")
+                    // Если все нормы отсутствуют - серый фон
+                    if (сито == "—" && пыль == "—" && пк == "—")
                     {
-                        row.DefaultCellStyle.BackColor = Color.LightGray;
+                        row.DefaultCellStyle.BackColor = Color.FromArgb(240, 240, 240);
+                        row.DefaultCellStyle.ForeColor = Color.Gray;
+                    }
+
+                    // Подсветка лучших показателей
+                    if (пыль != "—")
+                    {
+                        decimal dustValue = decimal.Parse(пыль.Replace("%", ""));
+                        if (dustValue < 1.5m)
+                        {
+                            row.Cells["Пыль"].Style.BackColor = Color.FromArgb(200, 230, 200);
+                            row.Cells["Пыль"].Style.ForeColor = Color.DarkGreen;
+                        }
+                    }
+
+                    if (пк != "—")
+                    {
+                        decimal pkValue = decimal.Parse(пк.Replace("%", ""));
+                        if (pkValue < 2.5m)
+                        {
+                            row.Cells["ПК"].Style.BackColor = Color.FromArgb(200, 230, 200);
+                            row.Cells["ПК"].Style.ForeColor = Color.DarkGreen;
+                        }
                     }
                 }
             }
@@ -98,7 +185,7 @@ namespace HrizotilApp
         private void BtnSaveDesc_Click(object sender, EventArgs e)
         {
             txtDescription.ReadOnly = true;
-            txtDescription.BackColor = Color.WhiteSmoke;
+            txtDescription.BackColor = Color.FromArgb(248, 248, 248);
             btnEditDesc.Visible = true;
             btnSaveDesc.Visible = false;
             btnCancelDesc.Visible = false;
@@ -114,7 +201,7 @@ namespace HrizotilApp
                                   "• учёта отгрузок и перемещений между складами\n" +
                                   "• расчёта остатков на любую дату";
             txtDescription.ReadOnly = true;
-            txtDescription.BackColor = Color.WhiteSmoke;
+            txtDescription.BackColor = Color.FromArgb(248, 248, 248);
             btnEditDesc.Visible = true;
             btnSaveDesc.Visible = false;
             btnCancelDesc.Visible = false;

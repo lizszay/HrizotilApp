@@ -4,8 +4,8 @@ namespace HrizotilApp
 {
     public partial class FormProductEdit : Form
     {
-        private Product _editingProduct;
-        private bool _isNew;
+        private Product editingProduct;
+        private bool isNew;
 
         public FormProductEdit(Product product = null)
         {
@@ -13,14 +13,14 @@ namespace HrizotilApp
 
             if (product == null)
             {
-                _isNew = true;
-                _editingProduct = new Product();
+                isNew = true;
+                editingProduct = new Product();
                 this.Text = "Добавление марки";
             }
             else
             {
-                _isNew = false;
-                _editingProduct = product;
+                isNew = false;
+                editingProduct = product;
                 this.Text = "Редактирование марки";
                 LoadProductData();
             }
@@ -41,12 +41,12 @@ namespace HrizotilApp
 
         private void LoadProductData()
         {
-            txtCode.Text = _editingProduct.Id;
-            cmbGroup.SelectedValue = _editingProduct.IdGroup;
-            txtSieve.Text = _editingProduct.NormSieve135mmMin?.ToString();
-            txtDust.Text = _editingProduct.NormDustMax?.ToString();
-            txtPk.Text = _editingProduct.NormPk075mmMax?.ToString();
-            txtDensity.Text = _editingProduct.BulkDensityTarget?.ToString();
+            txtCode.Text = editingProduct.Id;
+            cmbGroup.SelectedValue = editingProduct.IdGroup;
+            txtSieve.Text = editingProduct.NormSieve135mmMin?.ToString();
+            txtDust.Text = editingProduct.NormDustMax?.ToString();
+            txtPk.Text = editingProduct.NormPk075mmMax?.ToString();
+            txtDensity.Text = editingProduct.BulkDensityTarget?.ToString();
 
             // При редактировании код марки нельзя менять
             txtCode.ReadOnly = true;
@@ -63,22 +63,63 @@ namespace HrizotilApp
                 return;
             }
 
+            // Проверка на отрицательные значения для полей
+            if (!string.IsNullOrWhiteSpace(txtSieve.Text))
+            {
+                if (int.TryParse(txtSieve.Text, out int sieve) && sieve < 0)
+                {
+                    MessageBox.Show("Сито не может быть отрицательным!",
+                        "Ошибка валидации", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(txtDust.Text))
+            {
+                if (int.TryParse(txtDust.Text, out int dust) && dust < 0)
+                {
+                    MessageBox.Show("Пыль не может быть отрицательной!",
+                        "Ошибка валидации", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(txtPk.Text))
+            {
+                if (int.TryParse(txtPk.Text, out int pk) && pk < 0)
+                {
+                    MessageBox.Show("ПК не может быть отрицательным!",
+                        "Ошибка валидации", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(txtDensity.Text))
+            {
+                if (int.TryParse(txtDensity.Text, out int density) && density < 0)
+                {
+                    MessageBox.Show("Плотность не может быть отрицательной!",
+                        "Ошибка валидации", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+
             using (var db = new HrizotilAccountingDbContext())
             {
-                if (_isNew)
+                if (isNew)
                 {
-                    _editingProduct.Id = txtCode.Text.Trim();
-                    _editingProduct.IdGroup = (int)cmbGroup.SelectedValue;
-                    _editingProduct.NormSieve135mmMin = ParseNullableInt(txtSieve.Text);
-                    _editingProduct.NormDustMax = ParseNullableInt(txtDust.Text);
-                    _editingProduct.NormPk075mmMax = ParseNullableInt(txtPk.Text);
-                    _editingProduct.BulkDensityTarget = ParseNullableInt(txtDensity.Text);
+                    editingProduct.Id = txtCode.Text.Trim();
+                    editingProduct.IdGroup = (int)cmbGroup.SelectedValue;
+                    editingProduct.NormSieve135mmMin = ParseNullableInt(txtSieve.Text);
+                    editingProduct.NormDustMax = ParseNullableInt(txtDust.Text);
+                    editingProduct.NormPk075mmMax = ParseNullableInt(txtPk.Text);
+                    editingProduct.BulkDensityTarget = ParseNullableInt(txtDensity.Text);
 
-                    db.Products.Add(_editingProduct);
+                    db.Products.Add(editingProduct);
                 }
                 else
                 {
-                    var product = db.Products.Find(_editingProduct.Id);
+                    var product = db.Products.Find(editingProduct.Id);
                     if (product != null)
                     {
                         product.IdGroup = (int)cmbGroup.SelectedValue;

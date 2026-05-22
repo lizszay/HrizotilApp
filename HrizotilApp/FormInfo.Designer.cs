@@ -59,11 +59,11 @@
             panelTop.Controls.Add(lblUserName);
             panelTop.Controls.Add(btnLogout);
             panelTop.Dock = DockStyle.Top;
-            panelTop.Location = new Point(13, 11);
+            panelTop.Location = new Point(0, 0);
             panelTop.Margin = new Padding(4, 3, 4, 3);
             panelTop.Name = "panelTop";
             panelTop.Padding = new Padding(13, 6, 13, 6);
-            panelTop.Size = new Size(958, 50);
+            panelTop.Size = new Size(984, 50);
             panelTop.TabIndex = 3;
             // 
             // btnBack
@@ -85,7 +85,7 @@
             // 
             lblUserName.Dock = DockStyle.Right;
             lblUserName.Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            lblUserName.Location = new Point(641, 6);
+            lblUserName.Location = new Point(667, 6);
             lblUserName.Margin = new Padding(4, 0, 4, 0);
             lblUserName.Name = "lblUserName";
             lblUserName.Size = new Size(175, 38);
@@ -100,7 +100,7 @@
             btnLogout.FlatAppearance.BorderSize = 0;
             btnLogout.FlatStyle = FlatStyle.Flat;
             btnLogout.Font = new Font("Times New Roman", 12F);
-            btnLogout.Location = new Point(816, 6);
+            btnLogout.Location = new Point(842, 6);
             btnLogout.Margin = new Padding(4, 3, 4, 3);
             btnLogout.Name = "btnLogout";
             btnLogout.Size = new Size(129, 38);
@@ -117,11 +117,11 @@
             panelDescription.Controls.Add(btnSaveDesc);
             panelDescription.Controls.Add(btnCancelDesc);
             panelDescription.Dock = DockStyle.Top;
-            panelDescription.Location = new Point(13, 61);
+            panelDescription.Location = new Point(0, 50);
             panelDescription.Margin = new Padding(4, 3, 4, 3);
             panelDescription.Name = "panelDescription";
             panelDescription.Padding = new Padding(13, 6, 13, 6);
-            panelDescription.Size = new Size(958, 145);
+            panelDescription.Size = new Size(984, 145);
             panelDescription.TabIndex = 2;
             // 
             // txtDescription
@@ -136,7 +136,7 @@
             txtDescription.Name = "txtDescription";
             txtDescription.ReadOnly = true;
             txtDescription.ScrollBars = ScrollBars.Vertical;
-            txtDescription.Size = new Size(932, 133);
+            txtDescription.Size = new Size(958, 133);
             txtDescription.TabIndex = 0;
             txtDescription.Text = resources.GetString("txtDescription.Text");
             // 
@@ -145,7 +145,7 @@
             btnEditDesc.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnEditDesc.BackColor = Color.LightBlue;
             btnEditDesc.FlatStyle = FlatStyle.Flat;
-            btnEditDesc.Location = new Point(1807, 101);
+            btnEditDesc.Location = new Point(1833, 101);
             btnEditDesc.Margin = new Padding(4, 3, 4, 3);
             btnEditDesc.Name = "btnEditDesc";
             btnEditDesc.Size = new Size(154, 34);
@@ -160,7 +160,7 @@
             btnSaveDesc.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnSaveDesc.BackColor = Color.LightGreen;
             btnSaveDesc.FlatStyle = FlatStyle.Flat;
-            btnSaveDesc.Location = new Point(1807, 101);
+            btnSaveDesc.Location = new Point(1833, 101);
             btnSaveDesc.Margin = new Padding(4, 3, 4, 3);
             btnSaveDesc.Name = "btnSaveDesc";
             btnSaveDesc.Size = new Size(129, 34);
@@ -175,7 +175,7 @@
             btnCancelDesc.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnCancelDesc.BackColor = Color.LightCoral;
             btnCancelDesc.FlatStyle = FlatStyle.Flat;
-            btnCancelDesc.Location = new Point(1665, 101);
+            btnCancelDesc.Location = new Point(1691, 101);
             btnCancelDesc.Margin = new Padding(4, 3, 4, 3);
             btnCancelDesc.Name = "btnCancelDesc";
             btnCancelDesc.Size = new Size(129, 34);
@@ -192,14 +192,15 @@
             panelButtons.Controls.Add(btnEdit);
             panelButtons.Controls.Add(btnDelete);
             panelButtons.Dock = DockStyle.Top;
-            panelButtons.Location = new Point(13, 206);
+            panelButtons.Location = new Point(0, 195);
             panelButtons.Margin = new Padding(4, 3, 4, 3);
             panelButtons.Name = "panelButtons";
-            panelButtons.Size = new Size(958, 56);
+            panelButtons.Size = new Size(984, 56);
             panelButtons.TabIndex = 1;
             // 
             // btnAdd
             // 
+            btnAdd.Anchor = AnchorStyles.None;
             btnAdd.BackColor = Color.LightGreen;
             btnAdd.FlatAppearance.BorderSize = 0;
             btnAdd.FlatStyle = FlatStyle.Flat;
@@ -214,6 +215,7 @@
             // 
             // btnEdit
             // 
+            btnEdit.Anchor = AnchorStyles.None;
             btnEdit.BackColor = Color.LightBlue;
             btnEdit.FlatAppearance.BorderSize = 0;
             btnEdit.FlatStyle = FlatStyle.Flat;
@@ -228,6 +230,7 @@
             // 
             // btnDelete
             // 
+            btnDelete.Anchor = AnchorStyles.None;
             btnDelete.BackColor = Color.LightCoral;
             btnDelete.FlatAppearance.BorderSize = 0;
             btnDelete.FlatStyle = FlatStyle.Flat;
@@ -248,32 +251,31 @@
             dgvProducts.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dgvProducts.BackgroundColor = Color.White;
             dgvProducts.Dock = DockStyle.Fill;
-            dgvProducts.Location = new Point(13, 262);
+            dgvProducts.Location = new Point(0, 251);
             dgvProducts.Margin = new Padding(4, 3, 4, 3);
             dgvProducts.MultiSelect = false;
             dgvProducts.Name = "dgvProducts";
             dgvProducts.ReadOnly = true;
             dgvProducts.RowHeadersVisible = false;
             dgvProducts.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvProducts.Size = new Size(958, 488);
+            dgvProducts.Size = new Size(984, 510);
             dgvProducts.TabIndex = 0;
             // 
             // FormInfo
             // 
-            this.AutoScaleDimensions = new SizeF(9F, 19F);
-            this.AutoScaleMode = AutoScaleMode.Font;
-            this.BackColor = Color.White;
-            this.ClientSize = new Size(984, 761);
-            this.Controls.Add(this.dgvProducts);
-            this.Controls.Add(this.panelButtons);
-            this.Controls.Add(this.panelDescription);
-            this.Controls.Add(this.panelTop);
-            this.Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            this.Margin = new Padding(4, 3, 4, 3);
-            this.Name = "FormInfo";
-            this.Padding = new Padding(0);           // ← убрали отступы
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.Text = "Информация о системе";
+            AutoScaleDimensions = new SizeF(9F, 19F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.White;
+            ClientSize = new Size(984, 761);
+            Controls.Add(dgvProducts);
+            Controls.Add(panelButtons);
+            Controls.Add(panelDescription);
+            Controls.Add(panelTop);
+            Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "FormInfo";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Информация о системе";
             panelTop.ResumeLayout(false);
             panelDescription.ResumeLayout(false);
             panelDescription.PerformLayout();

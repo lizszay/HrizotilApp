@@ -5,12 +5,15 @@ namespace HrizotilApp.Forms
 {
     public partial class FormStocks : Form
     {
-        public FormStocks()
+        private User currentUser;
+
+        public FormStocks(User user)
         {
             InitializeComponent();
+            currentUser = user;
+            lblUserName.Text = currentUser?.FullName ?? "Гость";
             LoadData();
-
-            dgvData.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(240, 240, 240);
+            DataGridViewStyle.ApplyStyle(dgvData);
         }
 
         private void LoadData()

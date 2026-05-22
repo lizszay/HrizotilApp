@@ -19,7 +19,7 @@ namespace HrizotilApp.Forms
             LoadProductsFilter();
             LoadData();
 
-            dgvData.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(240, 240, 240);
+            DataGridViewStyle.ApplyStyle(dgvData);
         }
 
         private void ConfigureUI()
@@ -29,9 +29,14 @@ namespace HrizotilApp.Forms
             else
                 lblUserName.Text = "Гость";
 
-            btnAdd.Visible = !readOnly;
-            btnEdit.Visible = !readOnly;
-            btnDelete.Visible = !readOnly;
+            int userRole = currentUser?.IdRole ?? 1;
+
+            // Редактировать: Кладовщик (3) и Админ (5)
+            bool canEdit = (userRole == 3 || userRole == 5);
+
+            btnAdd.Visible = canEdit;
+            btnEdit.Visible = canEdit;
+            btnDelete.Visible = canEdit;
 
             dtpFrom.Value = new DateTime(2026, 4, 1);
             dtpTo.Value = new DateTime(2026, 5, 21);
@@ -102,6 +107,13 @@ namespace HrizotilApp.Forms
 
         private void BtnFilter_Click(object sender, EventArgs e)
         {
+            if (dtpFrom.Value.Date > dtpTo.Value.Date)
+            {
+                MessageBox.Show("Начальная дата не может быть больше конечной!",
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dtpTo.Value = dtpFrom.Value;
+                return;
+            }
             LoadData();
         }
 

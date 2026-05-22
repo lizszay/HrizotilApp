@@ -12,11 +12,25 @@ namespace HrizotilApp.Forms
             InitializeComponent();
             currentUser = user;
 
-            if (!DesignMode)
-            {
-                LoadData();
-                dgvData.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(240, 240, 240);
-            }
+            ConfigureUI();
+            LoadData();
+            DataGridViewStyle.ApplyStyle(dgvData);
+            dgvData.Dock = DockStyle.Fill;
+        }
+
+        private void ConfigureUI()
+        {
+            if (currentUser != null)
+                lblUserName.Text = currentUser.FullName;
+
+            int userRole = currentUser?.IdRole ?? 0;
+
+            // Только админ (5) может управлять пользователями
+            bool isAdmin = (userRole == 5);
+
+            btnAdd.Visible = isAdmin;
+            btnEdit.Visible = isAdmin;
+            btnDelete.Visible = isAdmin;
         }
 
         private void LoadData()
@@ -30,22 +44,29 @@ namespace HrizotilApp.Forms
                         u.Id,
                         u.Login,
                         u.FullName,
-                        RoleName = u.Role.RoleName
+                        RoleName = u.Role.RoleName,
+                        RoleId = u.IdRole
                     })
                     .OrderBy(u => u.Id)
                     .ToList();
 
                 dgvData.DataSource = users;
-
-                if (dgvData.Columns.Contains("Id"))
-                    dgvData.Columns["Id"].HeaderText = "ID";
-                if (dgvData.Columns.Contains("Login"))
-                    dgvData.Columns["Login"].HeaderText = "Логин";
-                if (dgvData.Columns.Contains("FullName"))
-                    dgvData.Columns["FullName"].HeaderText = "ФИО";
-                if (dgvData.Columns.Contains("RoleName"))
-                    dgvData.Columns["RoleName"].HeaderText = "Роль";
+                SetupColumns();
             }
+        }
+
+        private void SetupColumns()
+        {
+            if (dgvData.Columns.Contains("Id"))
+                dgvData.Columns["Id"].HeaderText = "ID";
+            if (dgvData.Columns.Contains("Login"))
+                dgvData.Columns["Login"].HeaderText = "Логин";
+            if (dgvData.Columns.Contains("FullName"))
+                dgvData.Columns["FullName"].HeaderText = "ФИО";
+            if (dgvData.Columns.Contains("RoleName"))
+                dgvData.Columns["RoleName"].HeaderText = "Роль";
+            if (dgvData.Columns.Contains("RoleId"))
+                dgvData.Columns["RoleId"].Visible = false;
         }
 
         private void BtnAdd_Click(object sender, EventArgs e)
@@ -59,7 +80,12 @@ namespace HrizotilApp.Forms
 
         private void BtnEdit_Click(object sender, EventArgs e)
         {
-            if (dgvData.CurrentRow == null) return;
+            if (dgvData.CurrentRow == null)
+            {
+                MessageBox.Show("Выберите пользователя для редактирования!",
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             int userId = Convert.ToInt32(dgvData.CurrentRow.Cells["Id"].Value);
 
@@ -79,20 +105,33 @@ namespace HrizotilApp.Forms
 
         private void BtnDelete_Click(object sender, EventArgs e)
         {
-            if (dgvData.CurrentRow == null) return;
+            if (dgvData.CurrentRow == null)
+            {
+                MessageBox.Show("Выберите пользователя для удаления!",
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             int userId = Convert.ToInt32(dgvData.CurrentRow.Cells["Id"].Value);
             string userName = dgvData.CurrentRow.Cells["FullName"].Value.ToString();
+            string userLogin = dgvData.CurrentRow.Cells["Login"].Value.ToString();
 
             if (userId == currentUser.Id)
             {
-                MessageBox.Show("Нельзя удалить самого себя", "Ошибка",
+                MessageBox.Show("Нельзя удалить самого себя!", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (MessageBox.Show($"Удалить пользователя {userName}?", "Подтверждение",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (userLogin == "admin")
+            {
+                MessageBox.Show("Нельзя удалить главного администратора!", "Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (MessageBox.Show($"Удалить пользователя {userName} (логин: {userLogin})?",
+                "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 using (var db = new HrizotilAccountingDbContext())
                 {
@@ -102,6 +141,8 @@ namespace HrizotilApp.Forms
                         db.Users.Remove(user);
                         db.SaveChanges();
                         LoadData();
+                        MessageBox.Show("Пользователь успешно удален!",
+                            "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }

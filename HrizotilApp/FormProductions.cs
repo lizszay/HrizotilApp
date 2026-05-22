@@ -17,6 +17,8 @@ namespace HrizotilApp.Forms
             ConfigureUI();
             LoadProductsFilter();
             LoadData();
+
+            DataGridViewStyle.ApplyStyle(dgvData);
         }
 
         private void ConfigureUI()
@@ -26,9 +28,14 @@ namespace HrizotilApp.Forms
             else
                 lblUserName.Text = "Гость";
 
-            btnAdd.Visible = !readOnly;
-            btnEdit.Visible = !readOnly;
-            btnDelete.Visible = !readOnly;
+            int userRole = currentUser?.IdRole ?? 1;
+
+            // Редактировать: Мастер смены (2) и Админ (5)
+            bool canEdit = (userRole == 2 || userRole == 6);
+
+            btnAdd.Visible = canEdit;
+            btnEdit.Visible = canEdit;
+            btnDelete.Visible = canEdit;
 
             dtpFrom.Value = new DateTime(2026, 4, 1);
             dtpTo.Value = new DateTime(2026, 5, 21);
@@ -63,75 +70,83 @@ namespace HrizotilApp.Forms
                     query = query.Where(p => p.IdProduct == selectedProduct);
 
                 var data = query
-                    .GroupBy(p => new { p.DateProduction, p.IdProduct })
+                    .GroupBy(p => new { p.Id, p.DateProduction, p.IdProduct })
                     .Select(g => new
                     {
-                        prod_date = g.Key.DateProduction,
-                        prod_code = g.Key.IdProduct,
-                        shift1_plan = g.Where(x => x.Shift == 1).Select(x => x.PlanQuantity).FirstOrDefault(),
-                        shift1_fact = g.Where(x => x.Shift == 1).Select(x => x.FactQuantity).FirstOrDefault(),
-                        shift2_plan = g.Where(x => x.Shift == 2).Select(x => x.PlanQuantity).FirstOrDefault(),
-                        shift2_fact = g.Where(x => x.Shift == 2).Select(x => x.FactQuantity).FirstOrDefault(),
-                        shift3_plan = g.Where(x => x.Shift == 3).Select(x => x.PlanQuantity).FirstOrDefault(),
-                        shift3_fact = g.Where(x => x.Shift == 3).Select(x => x.FactQuantity).FirstOrDefault(),
-                        daily_plan = g.Sum(x => x.PlanQuantity),
-                        daily_fact = g.Sum(x => x.FactQuantity),
-                        daily_diff = g.Sum(x => x.FactQuantity) - g.Sum(x => x.PlanQuantity)
+                        g.Key.Id,
+                        g.Key.DateProduction,
+                        g.Key.IdProduct,
+                        PlanShift1 = g.Where(x => x.Shift == 1).Select(x => x.PlanQuantity).FirstOrDefault(),
+                        FactShift1 = g.Where(x => x.Shift == 1).Select(x => x.FactQuantity).FirstOrDefault(),
+                        PlanShift2 = g.Where(x => x.Shift == 2).Select(x => x.PlanQuantity).FirstOrDefault(),
+                        FactShift2 = g.Where(x => x.Shift == 2).Select(x => x.FactQuantity).FirstOrDefault(),
+                        PlanShift3 = g.Where(x => x.Shift == 3).Select(x => x.PlanQuantity).FirstOrDefault(),
+                        FactShift3 = g.Where(x => x.Shift == 3).Select(x => x.FactQuantity).FirstOrDefault(),
+                        DailyPlan = g.Sum(x => x.PlanQuantity),
+                        DailyFact = g.Sum(x => x.FactQuantity),
+                        Deviation = g.Sum(x => x.FactQuantity) - g.Sum(x => x.PlanQuantity)
                     })
-                    .OrderByDescending(x => x.prod_date)
-                    .ThenBy(x => x.prod_code)
+                    .OrderByDescending(x => x.DateProduction)
+                    .ThenBy(x => x.IdProduct)
                     .ToList();
 
                 dgvData.DataSource = data;
                 SetupColumns();
-                ApplyRowStyles();  // ← сразу после установки данных
+                ApplyRowStyles();
+
+                // Автоширина колонок
+                dgvData.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             }
         }
 
         private void SetupColumns()
         {
-            if (dgvData.Columns.Contains("prod_date"))
-                dgvData.Columns["prod_date"].HeaderText = "Дата";
-            if (dgvData.Columns.Contains("prod_code"))
-                dgvData.Columns["prod_code"].HeaderText = "Номенклатура";
-            if (dgvData.Columns.Contains("shift1_plan"))
-                dgvData.Columns["shift1_plan"].HeaderText = "См1 План";
-            if (dgvData.Columns.Contains("shift1_fact"))
-                dgvData.Columns["shift1_fact"].HeaderText = "См1 Факт";
-            if (dgvData.Columns.Contains("shift2_plan"))
-                dgvData.Columns["shift2_plan"].HeaderText = "См2 План";
-            if (dgvData.Columns.Contains("shift2_fact"))
-                dgvData.Columns["shift2_fact"].HeaderText = "См2 Факт";
-            if (dgvData.Columns.Contains("shift3_plan"))
-                dgvData.Columns["shift3_plan"].HeaderText = "См3 План";
-            if (dgvData.Columns.Contains("shift3_fact"))
-                dgvData.Columns["shift3_fact"].HeaderText = "См3 Факт";
-            if (dgvData.Columns.Contains("daily_plan"))
-                dgvData.Columns["daily_plan"].HeaderText = "Сутки План";
-            if (dgvData.Columns.Contains("daily_fact"))
-                dgvData.Columns["daily_fact"].HeaderText = "Сутки Факт";
-            if (dgvData.Columns.Contains("daily_diff"))
-                dgvData.Columns["daily_diff"].HeaderText = "Отклонение";
+            if (dgvData.Columns.Contains("Id"))
+                dgvData.Columns["Id"].Visible = false;
+
+            if (dgvData.Columns.Contains("DateProduction"))
+            {
+                dgvData.Columns["DateProduction"].HeaderText = "Дата";
+                dgvData.Columns["DateProduction"].DefaultCellStyle.Format = "dd.MM.yyyy";
+            }
+            if (dgvData.Columns.Contains("IdProduct"))
+                dgvData.Columns["IdProduct"].HeaderText = "Марка";
+            if (dgvData.Columns.Contains("PlanShift1"))
+                dgvData.Columns["PlanShift1"].HeaderText = "См1 План";
+            if (dgvData.Columns.Contains("FactShift1"))
+                dgvData.Columns["FactShift1"].HeaderText = "См1 Факт";
+            if (dgvData.Columns.Contains("PlanShift2"))
+                dgvData.Columns["PlanShift2"].HeaderText = "См2 План";
+            if (dgvData.Columns.Contains("FactShift2"))
+                dgvData.Columns["FactShift2"].HeaderText = "См2 Факт";
+            if (dgvData.Columns.Contains("PlanShift3"))
+                dgvData.Columns["PlanShift3"].HeaderText = "См3 План";
+            if (dgvData.Columns.Contains("FactShift3"))
+                dgvData.Columns["FactShift3"].HeaderText = "См3 Факт";
+            if (dgvData.Columns.Contains("DailyPlan"))
+                dgvData.Columns["DailyPlan"].HeaderText = "Сутки План";
+            if (dgvData.Columns.Contains("DailyFact"))
+                dgvData.Columns["DailyFact"].HeaderText = "Сутки Факт";
+            if (dgvData.Columns.Contains("Deviation"))
+                dgvData.Columns["Deviation"].HeaderText = "Отклонение";
         }
 
         private void ApplyRowStyles()
         {
             foreach (DataGridViewRow row in dgvData.Rows)
             {
-                if (row.Cells["daily_diff"].Value != null)
+                if (row.Cells["Deviation"].Value != null)
                 {
-                    decimal diff = Convert.ToDecimal(row.Cells["daily_diff"].Value);
+                    decimal diff = Convert.ToDecimal(row.Cells["Deviation"].Value);
                     if (diff < 0)
                     {
-                        // Только ячейка отклонения — красный фон
-                        row.Cells["daily_diff"].Style.BackColor = Color.LightCoral;
-                        row.Cells["daily_diff"].Style.Font = new Font(dgvData.Font, FontStyle.Bold);
+                        row.Cells["Deviation"].Style.BackColor = Color.LightCoral;
+                        row.Cells["Deviation"].Style.Font = new Font(dgvData.Font, FontStyle.Bold);
                     }
-                    else if (diff > 0)
+                    else
                     {
-                        // Только ячейка отклонения — зелёный текст
-                        row.Cells["daily_diff"].Style.ForeColor = Color.Green;
-                        row.Cells["daily_diff"].Style.Font = new Font(dgvData.Font, FontStyle.Bold);
+                        row.Cells["Deviation"].Style.BackColor = Color.Empty;
+                        row.Cells["Deviation"].Style.Font = new Font(dgvData.Font, FontStyle.Regular);
                     }
                 }
             }
@@ -139,7 +154,14 @@ namespace HrizotilApp.Forms
 
         private void BtnFilter_Click(object sender, EventArgs e)
         {
-            LoadData();  // при фильтрации тоже перезагружаем с подсветкой
+            if (dtpFrom.Value.Date > dtpTo.Value.Date)
+            {
+                MessageBox.Show("Начальная дата не может быть больше конечной!",
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dtpTo.Value = dtpFrom.Value;
+                return;
+            }
+            LoadData();
         }
 
         private void BtnBack_Click(object sender, EventArgs e)
@@ -149,23 +171,78 @@ namespace HrizotilApp.Forms
 
         private void BtnLogout_Click(object sender, EventArgs e)
         {
+            // Закрываем все формы и показываем форму входа
             this.DialogResult = DialogResult.Abort;
             this.Close();
         }
 
         private void BtnAdd_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Добавление выработки (в разработке)");
+            using (var form = new FormProductionEdit(null))
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    LoadData();
+                }
+            }
         }
 
         private void BtnEdit_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Редактирование выработки (в разработке)");
+            if (dgvData.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Выберите запись для редактирования!",
+                    "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int id = Convert.ToInt32(dgvData.SelectedRows[0].Cells["Id"].Value);
+
+            using (var db = new HrizotilAccountingDbContext())
+            {
+                var production = db.Productions.Find(id);
+                if (production != null)
+                {
+                    using (var form = new FormProductionEdit(production))
+                    {
+                        if (form.ShowDialog() == DialogResult.OK)
+                        {
+                            LoadData();
+                        }
+                    }
+                }
+            }
         }
 
         private void BtnDelete_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Удаление выработки (в разработке)");
+            if (dgvData.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Выберите запись для удаления!",
+                    "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int id = Convert.ToInt32(dgvData.SelectedRows[0].Cells["Id"].Value);
+
+            DialogResult result = MessageBox.Show("Вы действительно хотите удалить эту запись?",
+                "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                using (var db = new HrizotilAccountingDbContext())
+                {
+                    var production = db.Productions.Find(id);
+                    if (production != null)
+                    {
+                        db.Productions.Remove(production);
+                        db.SaveChanges();
+                        LoadData();
+                        MessageBox.Show("Запись успешно удалена!",
+                            "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
         }
     }
 }

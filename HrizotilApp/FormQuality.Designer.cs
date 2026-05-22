@@ -23,9 +23,6 @@ namespace HrizotilApp.Forms
         private Button btnFilter;
 
         private Panel panelButtons;
-        private Button btnAdd;
-        private Button btnEdit;
-        private Button btnDelete;
 
         private DataGridView dgvData;
 
@@ -50,10 +47,10 @@ namespace HrizotilApp.Forms
             cmbProduct = new ComboBox();
             btnFilter = new Button();
             panelButtons = new Panel();
-            btnAdd = new Button();
-            btnEdit = new Button();
-            btnDelete = new Button();
             dgvData = new DataGridView();
+            btnAdd = new Button();
+            btnDelete = new Button();
+            btnEdit = new Button();
             panelTop.SuspendLayout();
             panelFilter.SuspendLayout();
             panelButtons.SuspendLayout();
@@ -195,45 +192,6 @@ namespace HrizotilApp.Forms
             panelButtons.Size = new Size(1000, 55);
             panelButtons.TabIndex = 1;
             // 
-            // btnAdd
-            // 
-            btnAdd.BackColor = Color.LightGreen;
-            btnAdd.FlatStyle = FlatStyle.Flat;
-            btnAdd.Font = new Font("Times New Roman", 12F);
-            btnAdd.Location = new Point(220, 8);
-            btnAdd.Name = "btnAdd";
-            btnAdd.Size = new Size(120, 38);
-            btnAdd.TabIndex = 0;
-            btnAdd.Text = "➕ Добавить";
-            btnAdd.UseVisualStyleBackColor = false;
-            btnAdd.Click += BtnAdd_Click;
-            // 
-            // btnEdit
-            // 
-            btnEdit.BackColor = Color.LightBlue;
-            btnEdit.FlatStyle = FlatStyle.Flat;
-            btnEdit.Font = new Font("Times New Roman", 12F);
-            btnEdit.Location = new Point(360, 8);
-            btnEdit.Name = "btnEdit";
-            btnEdit.Size = new Size(130, 38);
-            btnEdit.TabIndex = 1;
-            btnEdit.Text = "✏️ Редактировать";
-            btnEdit.UseVisualStyleBackColor = false;
-            btnEdit.Click += BtnEdit_Click;
-            // 
-            // btnDelete
-            // 
-            btnDelete.BackColor = Color.LightCoral;
-            btnDelete.FlatStyle = FlatStyle.Flat;
-            btnDelete.Font = new Font("Times New Roman", 12F);
-            btnDelete.Location = new Point(510, 8);
-            btnDelete.Name = "btnDelete";
-            btnDelete.Size = new Size(120, 38);
-            btnDelete.TabIndex = 2;
-            btnDelete.Text = "🗑️ Удалить";
-            btnDelete.UseVisualStyleBackColor = false;
-            btnDelete.Click += BtnDelete_Click;
-            // 
             // dgvData
             // 
             dgvData.AllowUserToAddRows = false;
@@ -248,6 +206,48 @@ namespace HrizotilApp.Forms
             dgvData.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvData.Size = new Size(1000, 500);
             dgvData.TabIndex = 0;
+            // 
+            // btnAdd
+            // 
+            btnAdd.Anchor = AnchorStyles.None;
+            btnAdd.BackColor = Color.LightGreen;
+            btnAdd.FlatAppearance.BorderSize = 0;
+            btnAdd.FlatStyle = FlatStyle.Flat;
+            btnAdd.Location = new Point(243, 8);
+            btnAdd.Margin = new Padding(4, 3, 4, 3);
+            btnAdd.Name = "btnAdd";
+            btnAdd.Size = new Size(154, 39);
+            btnAdd.TabIndex = 7;
+            btnAdd.Text = "➕ Добавить";
+            btnAdd.UseVisualStyleBackColor = false;
+            // 
+            // btnDelete
+            // 
+            btnDelete.Anchor = AnchorStyles.None;
+            btnDelete.BackColor = Color.LightCoral;
+            btnDelete.FlatAppearance.BorderSize = 0;
+            btnDelete.FlatStyle = FlatStyle.Flat;
+            btnDelete.Location = new Point(603, 8);
+            btnDelete.Margin = new Padding(4, 3, 4, 3);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(154, 39);
+            btnDelete.TabIndex = 9;
+            btnDelete.Text = "🗑️ Удалить";
+            btnDelete.UseVisualStyleBackColor = false;
+            // 
+            // btnEdit
+            // 
+            btnEdit.Anchor = AnchorStyles.None;
+            btnEdit.BackColor = Color.LightBlue;
+            btnEdit.FlatAppearance.BorderSize = 0;
+            btnEdit.FlatStyle = FlatStyle.Flat;
+            btnEdit.Location = new Point(410, 8);
+            btnEdit.Margin = new Padding(4, 3, 4, 3);
+            btnEdit.Name = "btnEdit";
+            btnEdit.Size = new Size(180, 39);
+            btnEdit.TabIndex = 8;
+            btnEdit.Text = "✏️ Редактировать";
+            btnEdit.UseVisualStyleBackColor = false;
             // 
             // FormQuality
             // 
@@ -269,5 +269,9 @@ namespace HrizotilApp.Forms
             ((System.ComponentModel.ISupportInitialize)dgvData).EndInit();
             ResumeLayout(false);
         }
+
+        private Button btnAdd;
+        private Button btnEdit;
+        private Button btnDelete;
     }
 }

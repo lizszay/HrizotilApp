@@ -6,13 +6,13 @@ namespace HrizotilApp
     public partial class FormMenu : Form
     {
         private User currentUser;
-        private bool isAdmin;
+        private int userRole;
 
         public FormMenu(User user, bool isGuest)
         {
             InitializeComponent();
             currentUser = user;
-            isAdmin = (currentUser != null && currentUser.IdRole == 5);
+            userRole = currentUser?.IdRole ?? 1;
 
             ConfigureMenu();
         }
@@ -22,10 +22,10 @@ namespace HrizotilApp
             if (currentUser != null)
                 lblUserName.Text = currentUser.FullName;
             else
-                lblUserName.Text = "Гость";
+                lblUserName.Text = "Пользователь";
 
-            btnProducts.Visible = isAdmin;
-            btnUsers.Visible = isAdmin;
+            // Кнопка пользователей только для админа
+            btnUsers.Visible = (userRole == 5);
         }
 
         private void BtnInfo_Click(object sender, EventArgs e)
@@ -36,41 +36,44 @@ namespace HrizotilApp
 
         private void BtnProductions_Click(object sender, EventArgs e)
         {
-            bool readOnly = (currentUser.IdRole != 2 && currentUser.IdRole != 5);
-            var form = new FormProductions(currentUser, readOnly);
+            bool canEdit = (userRole == 2 || userRole == 5);
+            var form = new FormProductions(currentUser, !canEdit);
             form.ShowDialog();
         }
 
         private void BtnQuality_Click(object sender, EventArgs e)
         {
-            bool readOnly = (currentUser.IdRole != 1 && currentUser.IdRole != 5);
-            var form = new FormQuality(currentUser, readOnly);
+            bool canEdit = (userRole == 1 || userRole == 5);
+            var form = new FormQuality(currentUser, !canEdit);
             form.ShowDialog();
         }
 
         private void BtnShipments_Click(object sender, EventArgs e)
         {
-            bool readOnly = (currentUser.IdRole != 3 && currentUser.IdRole != 5);
-            var form = new FormShipments(currentUser, readOnly);
+            bool canEdit = (userRole == 3 || userRole == 5);
+            var form = new FormShipments(currentUser, !canEdit);
             form.ShowDialog();
         }
 
         private void BtnStocks_Click(object sender, EventArgs e)
         {
-            var form = new FormStocks();
+            var form = new FormStocks(currentUser);
             form.ShowDialog();
         }
 
-        private void BtnProducts_Click(object sender, EventArgs e)
+        private void BtnProfile_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Управление марками будет добавлено позже", "В разработке");
+            var form = new FormProfile(currentUser);
+            form.ShowDialog();
         }
 
         private void BtnUsers_Click(object sender, EventArgs e)
         {
-            if (!isAdmin) return;
-            var form = new FormUsers(currentUser);
-            form.ShowDialog();
+            if (userRole == 5)
+            {
+                var form = new FormUsers(currentUser);
+                form.ShowDialog();
+            }
         }
 
         private void BtnBack_Click(object sender, EventArgs e)

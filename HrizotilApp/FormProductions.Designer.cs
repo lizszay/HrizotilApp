@@ -47,8 +47,8 @@
             btnFilter = new Button();
             panelButtons = new Panel();
             btnAdd = new Button();
-            btnEdit = new Button();
             btnDelete = new Button();
+            btnEdit = new Button();
             dgvData = new DataGridView();
             panelTop.SuspendLayout();
             panelFilter.SuspendLayout();
@@ -187,8 +187,8 @@
             // 
             panelButtons.BackColor = Color.White;
             panelButtons.Controls.Add(btnAdd);
-            panelButtons.Controls.Add(btnEdit);
             panelButtons.Controls.Add(btnDelete);
+            panelButtons.Controls.Add(btnEdit);
             panelButtons.Dock = DockStyle.Top;
             panelButtons.Location = new Point(0, 95);
             panelButtons.Name = "panelButtons";
@@ -198,56 +198,59 @@
             // 
             // btnAdd
             // 
+            btnAdd.Anchor = AnchorStyles.None;
             btnAdd.BackColor = Color.LightGreen;
             btnAdd.FlatAppearance.BorderSize = 0;
             btnAdd.FlatStyle = FlatStyle.Flat;
-            btnAdd.Font = new Font("Times New Roman", 12F);
-            btnAdd.Location = new Point(295, 8);
+            btnAdd.Location = new Point(243, 6);
+            btnAdd.Margin = new Padding(4, 3, 4, 3);
             btnAdd.Name = "btnAdd";
-            btnAdd.Size = new Size(120, 38);
-            btnAdd.TabIndex = 0;
+            btnAdd.Size = new Size(154, 39);
+            btnAdd.TabIndex = 4;
             btnAdd.Text = "➕ Добавить";
             btnAdd.UseVisualStyleBackColor = false;
             btnAdd.Click += BtnAdd_Click;
             // 
-            // btnEdit
-            // 
-            btnEdit.BackColor = Color.LightBlue;
-            btnEdit.FlatAppearance.BorderSize = 0;
-            btnEdit.FlatStyle = FlatStyle.Flat;
-            btnEdit.Font = new Font("Times New Roman", 12F);
-            btnEdit.Location = new Point(435, 8);
-            btnEdit.Name = "btnEdit";
-            btnEdit.Size = new Size(130, 38);
-            btnEdit.TabIndex = 1;
-            btnEdit.Text = "✏️ Редактировать";
-            btnEdit.UseVisualStyleBackColor = false;
-            btnEdit.Click += BtnEdit_Click;
-            // 
             // btnDelete
             // 
+            btnDelete.Anchor = AnchorStyles.None;
             btnDelete.BackColor = Color.LightCoral;
             btnDelete.FlatAppearance.BorderSize = 0;
             btnDelete.FlatStyle = FlatStyle.Flat;
-            btnDelete.Font = new Font("Times New Roman", 12F);
-            btnDelete.Location = new Point(585, 8);
+            btnDelete.Location = new Point(603, 6);
+            btnDelete.Margin = new Padding(4, 3, 4, 3);
             btnDelete.Name = "btnDelete";
-            btnDelete.Size = new Size(120, 38);
-            btnDelete.TabIndex = 2;
+            btnDelete.Size = new Size(154, 39);
+            btnDelete.TabIndex = 6;
             btnDelete.Text = "🗑️ Удалить";
             btnDelete.UseVisualStyleBackColor = false;
             btnDelete.Click += BtnDelete_Click;
+            // 
+            // btnEdit
+            // 
+            btnEdit.Anchor = AnchorStyles.None;
+            btnEdit.BackColor = Color.LightBlue;
+            btnEdit.FlatAppearance.BorderSize = 0;
+            btnEdit.FlatStyle = FlatStyle.Flat;
+            btnEdit.Location = new Point(410, 6);
+            btnEdit.Margin = new Padding(4, 3, 4, 3);
+            btnEdit.Name = "btnEdit";
+            btnEdit.Size = new Size(180, 39);
+            btnEdit.TabIndex = 5;
+            btnEdit.Text = "✏️ Редактировать";
+            btnEdit.UseVisualStyleBackColor = false;
+            btnEdit.Click += BtnEdit_Click;
             // 
             // dgvData
             // 
             dgvData.AllowUserToAddRows = false;
             dataGridViewCellStyle1.BackColor = Color.FromArgb(224, 224, 224);
             dgvData.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dgvData.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvData.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvData.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dgvData.BackgroundColor = Color.White;
             dgvData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvData.Dock = DockStyle.Fill;
             dgvData.Location = new Point(0, 150);
             dgvData.MultiSelect = false;
             dgvData.Name = "dgvData";

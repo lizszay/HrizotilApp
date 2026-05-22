@@ -14,20 +14,33 @@ namespace HrizotilApp
             {
                 using (var loginForm = new FormLogin())
                 {
-                    if (loginForm.ShowDialog() != DialogResult.OK)
+                    var result = loginForm.ShowDialog();
+
+                    if (result != DialogResult.OK)
                     {
-                        return; // Закрытие приложения
+                        return;
                     }
 
                     if (loginForm.IsGuest)
                     {
-                        // Гость ? только информация
-                        Application.Run(new FormInfo(loginForm.CurrentUser, true));
+                        // Гость - сразу в информацию
+                        using (var infoForm = new FormInfo(loginForm.CurrentUser, true))
+                        {
+                            infoForm.ShowDialog();
+                        }
+                        continue;
                     }
                     else
                     {
-                        // Авторизованный пользователь ? главное меню
-                        Application.Run(new FormMenu(loginForm.CurrentUser, false));
+                        // Авторизованный - в меню
+                        using (var menuForm = new FormMenu(loginForm.CurrentUser, false))
+                        {
+                            var menuResult = menuForm.ShowDialog();
+                            if (menuResult == DialogResult.Abort)
+                            {
+                                continue;
+                            }
+                        }
                     }
                 }
             }
