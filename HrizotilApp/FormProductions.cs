@@ -31,7 +31,7 @@ namespace HrizotilApp.Forms
             int userRole = currentUser?.IdRole ?? 1;
 
             // Редактировать: Мастер смены (2) и Админ (5)
-            bool canEdit = (userRole == 2 || userRole == 6);
+            bool canEdit = (userRole == 2 || userRole == 5);
 
             btnAdd.Visible = canEdit;
             btnEdit.Visible = canEdit;
