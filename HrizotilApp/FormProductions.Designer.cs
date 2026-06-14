@@ -24,6 +24,16 @@
 
         private DataGridView dgvData;
 
+        private Panel panelPagination;
+        private Button btnFirst;
+        private Button btnPrev;
+        private Button btnNext;
+        private Button btnLast;
+        private Label lblPageInfo;
+        private ComboBox cmbPageSize;
+
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -278,7 +288,88 @@
             panelFilter.PerformLayout();
             panelButtons.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvData).EndInit();
+
+            // panelPagination
+            this.panelPagination = new Panel();
+            this.panelPagination.Dock = DockStyle.Bottom;
+            this.panelPagination.Height = 45;
+            this.panelPagination.BackColor = Color.White;
+            this.panelPagination.Padding = new Padding(10, 5, 10, 5);
+
+            // btnFirst
+            this.btnFirst = new Button();
+            this.btnFirst.Text = "⏮ Первая";
+            this.btnFirst.Size = new Size(85, 32);
+            this.btnFirst.FlatStyle = FlatStyle.Flat;
+            this.btnFirst.BackColor = Color.LightGray;
+            this.btnFirst.Click += BtnFirst_Click;
+
+            // btnPrev
+            this.btnPrev = new Button();
+            this.btnPrev.Text = "◀ Назад";
+            this.btnPrev.Size = new Size(85, 32);
+            this.btnPrev.FlatStyle = FlatStyle.Flat;
+            this.btnPrev.BackColor = Color.LightGray;
+            this.btnPrev.Click += BtnPrev_Click;
+
+            // btnNext
+            this.btnNext = new Button();
+            this.btnNext.Text = "Вперед ▶";
+            this.btnNext.Size = new Size(85, 32);
+            this.btnNext.FlatStyle = FlatStyle.Flat;
+            this.btnNext.BackColor = Color.LightGray;
+            this.btnNext.Click += BtnNext_Click;
+
+            // btnLast
+            this.btnLast = new Button();
+            this.btnLast.Text = "Последняя ⏩";
+            this.btnLast.Size = new Size(95, 32);
+            this.btnLast.FlatStyle = FlatStyle.Flat;
+            this.btnLast.BackColor = Color.LightGray;
+            this.btnLast.Click += BtnLast_Click;
+
+            // lblPageInfo
+            this.lblPageInfo = new Label();
+            this.lblPageInfo.Text = "Страница 1 из 1";
+            this.lblPageInfo.Size = new Size(150, 32);
+            this.lblPageInfo.TextAlign = ContentAlignment.MiddleCenter;
+            this.lblPageInfo.Font = new Font("Times New Roman", 11F);
+
+            // cmbPageSize
+            this.cmbPageSize = new ComboBox();
+            this.cmbPageSize.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.cmbPageSize.Items.AddRange(new object[] { "15", "20", "30", "40", "50" });
+            this.cmbPageSize.SelectedIndex = 1;
+            this.cmbPageSize.Size = new Size(65, 27);
+            this.cmbPageSize.Font = new Font("Times New Roman", 11F);
+            this.cmbPageSize.SelectedIndexChanged += CmbPageSize_SelectedIndexChanged;
+
+            // Размещаем элементы на панели
+            this.panelPagination.Controls.Add(this.btnFirst);
+            this.panelPagination.Controls.Add(this.btnPrev);
+            this.panelPagination.Controls.Add(this.lblPageInfo);
+            this.panelPagination.Controls.Add(this.btnNext);
+            this.panelPagination.Controls.Add(this.btnLast);
+            this.panelPagination.Controls.Add(this.cmbPageSize);
+
+            // Позиционирование
+            this.btnFirst.Location = new Point(10, 6);
+            this.btnPrev.Location = new Point(100, 6);
+            this.lblPageInfo.Location = new Point(190, 6);
+            this.btnNext.Location = new Point(345, 6);
+            this.btnLast.Location = new Point(435, 6);
+            this.cmbPageSize.Location = new Point(540, 7);
+
+            // Добавляем панель на форму
+            this.Controls.Add(this.panelPagination);
+
+            // Переносим dgvData наверх (чтобы не перекрывала пагинацию)
+            this.dgvData.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            this.dgvData.Location = new Point(0, 150);
+            this.dgvData.Size = new Size(1000, 455); // Уменьшаем высоту, чтобы уместилась пагинация
+
             ResumeLayout(false);
+
         }
     }
 }

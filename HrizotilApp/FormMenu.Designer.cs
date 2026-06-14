@@ -1,4 +1,6 @@
-﻿namespace HrizotilApp
+﻿using System.Windows.Forms;
+
+namespace HrizotilApp
 {
     partial class FormMenu
     {
@@ -31,8 +33,8 @@
             lblUserName = new Label();
             btnLogout = new Button();
             tableLayoutPanel = new TableLayoutPanel();
-            btnProductions = new Button();
             btnInfo = new Button();
+            btnProductions = new Button();
             btnQuality = new Button();
             btnShipments = new Button();
             btnStocks = new Button();
@@ -94,40 +96,28 @@
             // tableLayoutPanel
             tableLayoutPanel.ColumnCount = 1;
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel.Controls.Add(btnInfo, 0, 0);        // Информация - первая
-            tableLayoutPanel.Controls.Add(btnProductions, 0, 1); // Выработка - вторая
-            tableLayoutPanel.Controls.Add(btnQuality, 0, 2);    // Качество - третья
-            tableLayoutPanel.Controls.Add(btnShipments, 0, 3);   // Отгрузки - четвертая
-            tableLayoutPanel.Controls.Add(btnStocks, 0, 4);      // Остатки - пятая
-            tableLayoutPanel.Controls.Add(btnProfile, 0, 5);     // Профиль - шестая
-            tableLayoutPanel.Controls.Add(btnUsers, 0, 6);       // Пользователи - седьмая
+            tableLayoutPanel.Controls.Add(btnInfo, 0, 0);
+            tableLayoutPanel.Controls.Add(btnProductions, 0, 1);
+            tableLayoutPanel.Controls.Add(btnQuality, 0, 2);
+            tableLayoutPanel.Controls.Add(btnShipments, 0, 3);
+            tableLayoutPanel.Controls.Add(btnStocks, 0, 4);
+            tableLayoutPanel.Controls.Add(btnProfile, 0, 5);
+            tableLayoutPanel.Controls.Add(btnUsers, 0, 6);
             tableLayoutPanel.Dock = DockStyle.Fill;
             tableLayoutPanel.Location = new Point(0, 50);
             tableLayoutPanel.Name = "tableLayoutPanel";
-            tableLayoutPanel.Padding = new Padding(50, 20, 50, 20);
+            tableLayoutPanel.Padding = new Padding(20);
             tableLayoutPanel.RowCount = 7;
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 70F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 70F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 70F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 70F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 70F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 70F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 70F));
+            // Процентное распределение высоты
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 14.28F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 14.28F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 14.28F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 14.28F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 14.28F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 14.28F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 14.32F));
             tableLayoutPanel.Size = new Size(800, 550);
             tableLayoutPanel.TabIndex = 1;
-
-            // btnProductions
-            btnProductions.Anchor = AnchorStyles.None;
-            btnProductions.BackColor = Color.FromArgb(52, 73, 94);
-            btnProductions.FlatStyle = FlatStyle.Flat;
-            btnProductions.FlatAppearance.BorderSize = 0;
-            btnProductions.Font = new Font("Times New Roman", 14F, FontStyle.Bold);
-            btnProductions.ForeColor = Color.White;
-            btnProductions.Size = new Size(350, 55);
-            btnProductions.Text = "🏭 Выработка";
-            btnProductions.UseVisualStyleBackColor = false;
-            btnProductions.Cursor = Cursors.Hand;
-            btnProductions.Click += BtnProductions_Click;
 
             // btnInfo
             btnInfo.Anchor = AnchorStyles.None;
@@ -136,11 +126,24 @@
             btnInfo.FlatAppearance.BorderSize = 0;
             btnInfo.Font = new Font("Times New Roman", 14F, FontStyle.Bold);
             btnInfo.ForeColor = Color.White;
-            btnInfo.Size = new Size(350, 55);
+            btnInfo.Size = new Size(320, 50);
             btnInfo.Text = "📋 Информация";
             btnInfo.UseVisualStyleBackColor = false;
             btnInfo.Cursor = Cursors.Hand;
             btnInfo.Click += BtnInfo_Click;
+
+            // btnProductions
+            btnProductions.Anchor = AnchorStyles.None;
+            btnProductions.BackColor = Color.FromArgb(52, 73, 94);
+            btnProductions.FlatStyle = FlatStyle.Flat;
+            btnProductions.FlatAppearance.BorderSize = 0;
+            btnProductions.Font = new Font("Times New Roman", 14F, FontStyle.Bold);
+            btnProductions.ForeColor = Color.White;
+            btnProductions.Size = new Size(320, 50);
+            btnProductions.Text = "🏭 Выработка";
+            btnProductions.UseVisualStyleBackColor = false;
+            btnProductions.Cursor = Cursors.Hand;
+            btnProductions.Click += BtnProductions_Click;
 
             // btnQuality
             btnQuality.Anchor = AnchorStyles.None;
@@ -149,7 +152,7 @@
             btnQuality.FlatAppearance.BorderSize = 0;
             btnQuality.Font = new Font("Times New Roman", 14F, FontStyle.Bold);
             btnQuality.ForeColor = Color.White;
-            btnQuality.Size = new Size(350, 55);
+            btnQuality.Size = new Size(320, 50);
             btnQuality.Text = "🔬 Качество";
             btnQuality.UseVisualStyleBackColor = false;
             btnQuality.Cursor = Cursors.Hand;
@@ -162,7 +165,7 @@
             btnShipments.FlatAppearance.BorderSize = 0;
             btnShipments.Font = new Font("Times New Roman", 14F, FontStyle.Bold);
             btnShipments.ForeColor = Color.White;
-            btnShipments.Size = new Size(350, 55);
+            btnShipments.Size = new Size(320, 50);
             btnShipments.Text = "🚛 Отгрузки";
             btnShipments.UseVisualStyleBackColor = false;
             btnShipments.Cursor = Cursors.Hand;
@@ -175,7 +178,7 @@
             btnStocks.FlatAppearance.BorderSize = 0;
             btnStocks.Font = new Font("Times New Roman", 14F, FontStyle.Bold);
             btnStocks.ForeColor = Color.White;
-            btnStocks.Size = new Size(350, 55);
+            btnStocks.Size = new Size(320, 50);
             btnStocks.Text = "📦 Остатки";
             btnStocks.UseVisualStyleBackColor = false;
             btnStocks.Cursor = Cursors.Hand;
@@ -188,7 +191,7 @@
             btnProfile.FlatAppearance.BorderSize = 0;
             btnProfile.Font = new Font("Times New Roman", 14F, FontStyle.Bold);
             btnProfile.ForeColor = Color.White;
-            btnProfile.Size = new Size(350, 55);
+            btnProfile.Size = new Size(320, 50);
             btnProfile.Text = "👤 Профиль";
             btnProfile.UseVisualStyleBackColor = false;
             btnProfile.Cursor = Cursors.Hand;
@@ -196,12 +199,12 @@
 
             // btnUsers
             btnUsers.Anchor = AnchorStyles.None;
-            btnUsers.BackColor = Color.FromArgb(52, 73, 94);  // ИСПРАВЛЕНО: было "aplenty"
+            btnUsers.BackColor = Color.FromArgb(52, 73, 94);
             btnUsers.FlatStyle = FlatStyle.Flat;
             btnUsers.FlatAppearance.BorderSize = 0;
             btnUsers.Font = new Font("Times New Roman", 14F, FontStyle.Bold);
             btnUsers.ForeColor = Color.White;
-            btnUsers.Size = new Size(350, 55);
+            btnUsers.Size = new Size(320, 50);
             btnUsers.Text = "👥 Пользователи";
             btnUsers.UseVisualStyleBackColor = false;
             btnUsers.Cursor = Cursors.Hand;
@@ -212,10 +215,13 @@
             AutoScaleDimensions = new SizeF(9F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 600);
+            MaximumSize = new Size(900, 700);
+            MinimumSize = new Size(600, 500);
+            MaximizeBox = false;        // ← Отключаем кнопку "Развернуть"
+            MinimizeBox = true;         // ← Кнопка "Свернуть" остается
             Controls.Add(tableLayoutPanel);
             Controls.Add(panelTop);
             Font = new Font("Times New Roman", 12F);
-            MinimumSize = new Size(600, 400);
             Name = "FormMenu";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Главное меню";

@@ -8,6 +8,12 @@ namespace HrizotilApp.Forms
         private User currentUser;
         private bool readOnly;
 
+        // Параметры пагинации
+        private int currentPage = 1;
+        private int pageSize = 50;
+        private int totalPages = 0;
+        private int totalRecords = 0;
+
         public FormProductions(User user, bool readOnlyMode)
         {
             InitializeComponent();
@@ -37,8 +43,14 @@ namespace HrizotilApp.Forms
             btnEdit.Visible = canEdit;
             btnDelete.Visible = canEdit;
 
-            dtpFrom.Value = new DateTime(2026, 4, 1);
-            dtpTo.Value = new DateTime(2026, 5, 21);
+            using (var db = new HrizotilAccountingDbContext())
+            {
+                var minDate = db.Productions.Min(p => p.DateProduction);
+                var maxDate = db.Productions.Max(p => p.DateProduction);
+
+                dtpFrom.Value = minDate.ToDateTime(TimeOnly.MinValue);
+                dtpTo.Value = maxDate.ToDateTime(TimeOnly.MinValue);
+            }
         }
 
         private void LoadProductsFilter()
@@ -56,47 +68,119 @@ namespace HrizotilApp.Forms
 
         private void LoadData()
         {
-            DateTime dateFrom = dtpFrom.Value.Date;
-            DateTime dateTo = dtpTo.Value.Date;
-            string selectedProduct = cmbProduct.SelectedItem?.ToString();
+            Cursor = Cursors.WaitCursor;
+            dgvData.Enabled = false;
 
-            using (var db = new HrizotilAccountingDbContext())
+            try
             {
-                var query = db.Productions
-                    .Where(p => p.DateProduction >= DateOnly.FromDateTime(dateFrom))
-                    .Where(p => p.DateProduction <= DateOnly.FromDateTime(dateTo));
+                DateTime dateFrom = dtpFrom.Value.Date;
+                DateTime dateTo = dtpTo.Value.Date;
+                string selectedProduct = cmbProduct.SelectedItem?.ToString();
 
-                if (selectedProduct != null && selectedProduct != "Все марки")
-                    query = query.Where(p => p.IdProduct == selectedProduct);
+                using (var db = new HrizotilAccountingDbContext())
+                {
+                    var query = db.Productions
+                        .Where(p => p.DateProduction >= DateOnly.FromDateTime(dateFrom))
+                        .Where(p => p.DateProduction <= DateOnly.FromDateTime(dateTo));
 
-                var data = query
-                    .GroupBy(p => new { p.Id, p.DateProduction, p.IdProduct })
-                    .Select(g => new
-                    {
-                        g.Key.Id,
-                        g.Key.DateProduction,
-                        g.Key.IdProduct,
-                        PlanShift1 = g.Where(x => x.Shift == 1).Select(x => x.PlanQuantity).FirstOrDefault(),
-                        FactShift1 = g.Where(x => x.Shift == 1).Select(x => x.FactQuantity).FirstOrDefault(),
-                        PlanShift2 = g.Where(x => x.Shift == 2).Select(x => x.PlanQuantity).FirstOrDefault(),
-                        FactShift2 = g.Where(x => x.Shift == 2).Select(x => x.FactQuantity).FirstOrDefault(),
-                        PlanShift3 = g.Where(x => x.Shift == 3).Select(x => x.PlanQuantity).FirstOrDefault(),
-                        FactShift3 = g.Where(x => x.Shift == 3).Select(x => x.FactQuantity).FirstOrDefault(),
-                        DailyPlan = g.Sum(x => x.PlanQuantity),
-                        DailyFact = g.Sum(x => x.FactQuantity),
-                        Deviation = g.Sum(x => x.FactQuantity) - g.Sum(x => x.PlanQuantity)
-                    })
-                    .OrderByDescending(x => x.DateProduction)
-                    .ThenBy(x => x.IdProduct)
-                    .ToList();
+                    if (selectedProduct != null && selectedProduct != "Все марки")
+                        query = query.Where(p => p.IdProduct == selectedProduct);
 
-                dgvData.DataSource = data;
-                SetupColumns();
-                ApplyRowStyles();
+                    // Получаем общее количество строк (групп)
+                    totalRecords = query
+                        .GroupBy(p => new { p.DateProduction, p.IdProduct })
+                        .Count();
 
-                // Автоширина колонок
-                dgvData.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+                    totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+                    if (totalPages == 0) totalPages = 1;
+
+                    if (currentPage > totalPages)
+                        currentPage = totalPages;
+                    if (currentPage < 1)
+                        currentPage = 1;
+
+                    // Получаем данные с пагинацией
+                    var data = query
+                        .GroupBy(p => new { p.DateProduction, p.IdProduct })
+                        .Select(g => new
+                        {
+                            Id = g.Min(p => p.Id),
+                            DateProduction = g.Key.DateProduction,
+                            IdProduct = g.Key.IdProduct,
+                            PlanShift1 = g.Where(x => x.Shift == 1).Sum(x => x.PlanQuantity),
+                            FactShift1 = g.Where(x => x.Shift == 1).Sum(x => x.FactQuantity),
+                            PlanShift2 = g.Where(x => x.Shift == 2).Sum(x => x.PlanQuantity),
+                            FactShift2 = g.Where(x => x.Shift == 2).Sum(x => x.FactQuantity),
+                            PlanShift3 = g.Where(x => x.Shift == 3).Sum(x => x.PlanQuantity),
+                            FactShift3 = g.Where(x => x.Shift == 3).Sum(x => x.FactQuantity),
+                            DailyPlan = g.Sum(x => x.PlanQuantity),
+                            DailyFact = g.Sum(x => x.FactQuantity),
+                            Deviation = g.Sum(x => x.FactQuantity) - g.Sum(x => x.PlanQuantity)
+                        })
+                        .OrderByDescending(x => x.DateProduction)
+                        .ThenBy(x => x.IdProduct)
+                        .Skip((currentPage - 1) * pageSize)
+                        .Take(pageSize)
+                        .ToList();
+
+                    dgvData.DataSource = data;
+                    SetupColumns();
+                    ApplyRowStyles();
+                    UpdatePaginationControls();
+                }
             }
+            finally
+            {
+                Cursor = Cursors.Default;
+                dgvData.Enabled = true;
+            }
+        }
+
+        private void UpdatePaginationControls()
+        {
+            btnFirst.Enabled = currentPage > 1;
+            btnPrev.Enabled = currentPage > 1;
+            btnNext.Enabled = currentPage < totalPages;
+            btnLast.Enabled = currentPage < totalPages;
+
+            lblPageInfo.Text = $"Страница {currentPage} из {totalPages} | Всего: {totalRecords} записей";
+        }
+
+        private void BtnFirst_Click(object sender, EventArgs e)
+        {
+            currentPage = 1;
+            LoadData();
+        }
+
+        private void BtnPrev_Click(object sender, EventArgs e)
+        {
+            if (currentPage > 1)
+            {
+                currentPage--;
+                LoadData();
+            }
+        }
+
+        private void BtnNext_Click(object sender, EventArgs e)
+        {
+            if (currentPage < totalPages)
+            {
+                currentPage++;
+                LoadData();
+            }
+        }
+
+        private void BtnLast_Click(object sender, EventArgs e)
+        {
+            currentPage = totalPages;
+            LoadData();
+        }
+
+        private void CmbPageSize_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            pageSize = Convert.ToInt32(cmbPageSize.SelectedItem);
+            currentPage = 1;
+            LoadData();
         }
 
         private void SetupColumns()
@@ -161,6 +245,7 @@ namespace HrizotilApp.Forms
                 dtpTo.Value = dtpFrom.Value;
                 return;
             }
+            currentPage = 1;
             LoadData();
         }
 
@@ -171,7 +256,6 @@ namespace HrizotilApp.Forms
 
         private void BtnLogout_Click(object sender, EventArgs e)
         {
-            // Закрываем все формы и показываем форму входа
             this.DialogResult = DialogResult.Abort;
             this.Close();
         }
