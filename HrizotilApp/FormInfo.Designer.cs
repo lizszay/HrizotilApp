@@ -8,6 +8,7 @@
         private Button btnBack;
         private Button btnLogout;
         private Label lblUserName;
+        private Label lblTitle;
 
         private Panel panelDescription;
         private TextBox txtDescription;
@@ -36,6 +37,7 @@
             btnBack = new Button();
             lblUserName = new Label();
             btnLogout = new Button();
+            lblTitle = new Label();
             panelDescription = new Panel();
             txtDescription = new TextBox();
             btnEditDesc = new Button();
@@ -58,6 +60,7 @@
             panelTop.Controls.Add(btnBack);
             panelTop.Controls.Add(lblUserName);
             panelTop.Controls.Add(btnLogout);
+            panelTop.Controls.Add(lblTitle);
             panelTop.Dock = DockStyle.Top;
             panelTop.Location = new Point(0, 0);
             panelTop.Margin = new Padding(4, 3, 4, 3);
@@ -75,7 +78,7 @@
             btnBack.Location = new Point(13, 6);
             btnBack.Margin = new Padding(4, 3, 4, 3);
             btnBack.Name = "btnBack";
-            btnBack.Size = new Size(129, 39);
+            btnBack.Size = new Size(100, 38);
             btnBack.TabIndex = 0;
             btnBack.Text = "← Назад";
             btnBack.UseVisualStyleBackColor = false;
@@ -109,6 +112,17 @@
             btnLogout.UseVisualStyleBackColor = false;
             btnLogout.Click += BtnLogout_Click;
             // 
+            // lblTitle
+            // 
+            lblTitle.Dock = DockStyle.Fill;
+            lblTitle.Font = new Font("Times New Roman", 16F, FontStyle.Bold);
+            lblTitle.Location = new Point(13, 6);
+            lblTitle.Name = "lblTitle";
+            lblTitle.Size = new Size(680, 38);
+            lblTitle.TabIndex = 3;
+            lblTitle.Text = "УЧЁТ ХРИЗОТИЛА";
+            lblTitle.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // panelDescription
             // 
             panelDescription.BackColor = Color.WhiteSmoke;
@@ -138,17 +152,17 @@
             txtDescription.ScrollBars = ScrollBars.Vertical;
             txtDescription.Size = new Size(958, 133);
             txtDescription.TabIndex = 0;
-            txtDescription.Text = resources.GetString("txtDescription.Text");
+            txtDescription.WordWrap = true;
             // 
             // btnEditDesc
             // 
             btnEditDesc.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnEditDesc.BackColor = Color.LightBlue;
             btnEditDesc.FlatStyle = FlatStyle.Flat;
-            btnEditDesc.Location = new Point(1833, 101);
+            btnEditDesc.Location = new Point(824, 101);
             btnEditDesc.Margin = new Padding(4, 3, 4, 3);
             btnEditDesc.Name = "btnEditDesc";
-            btnEditDesc.Size = new Size(154, 34);
+            btnEditDesc.Size = new Size(129, 34);
             btnEditDesc.TabIndex = 1;
             btnEditDesc.Text = "✎ Редактировать";
             btnEditDesc.UseVisualStyleBackColor = false;
@@ -160,7 +174,7 @@
             btnSaveDesc.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnSaveDesc.BackColor = Color.LightGreen;
             btnSaveDesc.FlatStyle = FlatStyle.Flat;
-            btnSaveDesc.Location = new Point(1833, 101);
+            btnSaveDesc.Location = new Point(824, 101);
             btnSaveDesc.Margin = new Padding(4, 3, 4, 3);
             btnSaveDesc.Name = "btnSaveDesc";
             btnSaveDesc.Size = new Size(129, 34);
@@ -175,7 +189,7 @@
             btnCancelDesc.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnCancelDesc.BackColor = Color.LightCoral;
             btnCancelDesc.FlatStyle = FlatStyle.Flat;
-            btnCancelDesc.Location = new Point(1691, 101);
+            btnCancelDesc.Location = new Point(679, 101);
             btnCancelDesc.Margin = new Padding(4, 3, 4, 3);
             btnCancelDesc.Name = "btnCancelDesc";
             btnCancelDesc.Size = new Size(129, 34);

@@ -87,13 +87,14 @@
             this.lblShift.TextAlign = ContentAlignment.MiddleLeft;
 
             // cmbShift
-            this.cmbShift.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.cmbShift.Font = new Font("Times New Roman", 12F);
-            this.cmbShift.Items.AddRange(new object[] { "1", "2", "3" });
-            this.cmbShift.Location = new Point(140, 120);
-            this.cmbShift.Name = "cmbShift";
-            this.cmbShift.Size = new Size(80, 27);
-            this.cmbShift.TabIndex = 5;
+            cmbShift.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbShift.Items.Clear();
+            cmbShift.Items.Add("1");
+            cmbShift.Items.Add("2");
+            cmbShift.Items.Add("3");
+            cmbShift.Location = new Point(140, 110);
+            cmbShift.Size = new Size(80, 27);
+            cmbShift.Font = new Font("Times New Roman", 12F);
 
             // lblPlan
             this.lblPlan.Font = new Font("Times New Roman", 12F);

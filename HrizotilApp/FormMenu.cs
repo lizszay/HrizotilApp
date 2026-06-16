@@ -24,55 +24,103 @@ namespace HrizotilApp
             else
                 lblUserName.Text = "Пользователь";
 
-            // Кнопка пользователей только для админа
             btnUsers.Visible = (userRole == 5);
         }
 
         private void BtnInfo_Click(object sender, EventArgs e)
         {
-            var form = new FormInfo(currentUser, false);
-            form.ShowDialog();
+            using (var form = new FormInfo(currentUser, false))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.Abort)
+                {
+                    this.DialogResult = DialogResult.Abort;
+                    this.Close();
+                }
+            }
         }
 
         private void BtnProductions_Click(object sender, EventArgs e)
         {
             bool canEdit = (userRole == 2 || userRole == 5);
-            var form = new FormProductions(currentUser, !canEdit);
-            form.ShowDialog();
+            using (var form = new FormProductions(currentUser, !canEdit))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.Abort)
+                {
+                    this.DialogResult = DialogResult.Abort;
+                    this.Close();
+                }
+            }
         }
 
         private void BtnQuality_Click(object sender, EventArgs e)
         {
             bool canEdit = (userRole == 1 || userRole == 5);
-            var form = new FormQuality(currentUser, !canEdit);
-            form.ShowDialog();
+            using (var form = new FormQuality(currentUser, !canEdit))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.Abort)
+                {
+                    this.DialogResult = DialogResult.Abort;
+                    this.Close();
+                }
+            }
         }
 
         private void BtnShipments_Click(object sender, EventArgs e)
         {
             bool canEdit = (userRole == 3 || userRole == 5);
-            var form = new FormShipments(currentUser, !canEdit);
-            form.ShowDialog();
+            using (var form = new FormShipments(currentUser, !canEdit))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.Abort)
+                {
+                    this.DialogResult = DialogResult.Abort;
+                    this.Close();
+                }
+            }
         }
 
         private void BtnStocks_Click(object sender, EventArgs e)
         {
-            var form = new FormStocks(currentUser);
-            form.ShowDialog();
+            using (var form = new FormStocks(currentUser))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.Abort)
+                {
+                    this.DialogResult = DialogResult.Abort;
+                    this.Close();
+                }
+            }
         }
 
         private void BtnProfile_Click(object sender, EventArgs e)
         {
-            var form = new FormProfile(currentUser);
-            form.ShowDialog();
+            using (var form = new FormProfile(currentUser))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.Abort)
+                {
+                    this.DialogResult = DialogResult.Abort;
+                    this.Close();
+                }
+            }
         }
 
         private void BtnUsers_Click(object sender, EventArgs e)
         {
             if (userRole == 5)
             {
-                var form = new FormUsers(currentUser);
-                form.ShowDialog();
+                using (var form = new FormUsers(currentUser))
+                {
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.Abort)
+                    {
+                        this.DialogResult = DialogResult.Abort;
+                        this.Close();
+                    }
+                }
             }
         }
 

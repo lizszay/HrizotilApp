@@ -15,7 +15,14 @@ namespace HrizotilApp.Forms
             ConfigureUI();
             LoadData();
             DataGridViewStyle.ApplyStyle(dgvData);
-            dgvData.Dock = DockStyle.Fill;
+
+            MinimumSize = new Size(800, 500);
+
+            dgvData.DataBindingComplete += (s, e) =>
+            {
+                DataGridViewStyle.SetColumnMinimumWidth(dgvData);
+                DataGridViewStyle.RefreshRowHeights(dgvData);
+            };
         }
 
         private void ConfigureUI()

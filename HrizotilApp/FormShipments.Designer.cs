@@ -218,6 +218,7 @@ namespace HrizotilApp.Forms
             btnAdd.TabIndex = 7;
             btnAdd.Text = "➕ Добавить";
             btnAdd.UseVisualStyleBackColor = false;
+            btnAdd.Click += BtnAdd_Click;
             // 
             // btnDelete
             // 
@@ -232,6 +233,7 @@ namespace HrizotilApp.Forms
             btnDelete.TabIndex = 9;
             btnDelete.Text = "🗑️ Удалить";
             btnDelete.UseVisualStyleBackColor = false;
+            btnDelete.Click += BtnDelete_Click;
             // 
             // btnEdit
             // 
@@ -246,6 +248,7 @@ namespace HrizotilApp.Forms
             btnEdit.TabIndex = 8;
             btnEdit.Text = "✏️ Редактировать";
             btnEdit.UseVisualStyleBackColor = false;
+            btnEdit.Click += BtnEdit_Click;
             // 
             // FormShipments
             // 

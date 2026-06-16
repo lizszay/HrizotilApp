@@ -10,7 +10,9 @@ namespace HrizotilApp
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            while (true)
+            bool showLogin = true;
+
+            while (showLogin)
             {
                 using (var loginForm = new FormLogin())
                 {
@@ -18,29 +20,35 @@ namespace HrizotilApp
 
                     if (result != DialogResult.OK)
                     {
-                        return;
+                        return; // Закрытие приложения
                     }
 
                     if (loginForm.IsGuest)
                     {
-                        // Гость - сразу в информацию
+                        // Гость - показываем информацию
                         using (var infoForm = new FormInfo(loginForm.CurrentUser, true))
                         {
-                            infoForm.ShowDialog();
+                            var infoResult = infoForm.ShowDialog();
+                            if (infoResult == DialogResult.Abort)
+                            {
+                                continue; // Выход - показываем форму входа
+                            }
                         }
-                        continue;
+                        // Если infoResult не Abort, то выходим из цикла
+                        showLogin = false;
                     }
                     else
                     {
-                        // Авторизованный - в меню
+                        // Авторизованный - показываем меню
                         using (var menuForm = new FormMenu(loginForm.CurrentUser, false))
                         {
                             var menuResult = menuForm.ShowDialog();
                             if (menuResult == DialogResult.Abort)
                             {
-                                continue;
+                                continue; // Выход - показываем форму входа
                             }
                         }
+                        showLogin = false;
                     }
                 }
             }

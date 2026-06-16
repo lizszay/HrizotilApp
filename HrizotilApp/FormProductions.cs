@@ -10,7 +10,7 @@ namespace HrizotilApp.Forms
 
         // Параметры пагинации
         private int currentPage = 1;
-        private int pageSize = 50;
+        private int pageSize = 20;
         private int totalPages = 0;
         private int totalRecords = 0;
 
@@ -25,6 +25,15 @@ namespace HrizotilApp.Forms
             LoadData();
 
             DataGridViewStyle.ApplyStyle(dgvData);
+
+            this.MinimumSize = new Size(1500, 550);
+
+            dgvData.DataBindingComplete += (s, e) =>
+            {
+                DataGridViewStyle.SetColumnMinimumWidth(dgvData);
+                DataGridViewStyle.RefreshRowHeights(dgvData);
+                ApplyRowStyles();
+            };
         }
 
         private void ConfigureUI()
@@ -35,21 +44,21 @@ namespace HrizotilApp.Forms
                 lblUserName.Text = "Гость";
 
             int userRole = currentUser?.IdRole ?? 1;
-
-            // Редактировать: Мастер смены (2) и Админ (5)
             bool canEdit = (userRole == 2 || userRole == 5);
 
             btnAdd.Visible = canEdit;
             btnEdit.Visible = canEdit;
             btnDelete.Visible = canEdit;
 
-            using (var db = new HrizotilAccountingDbContext())
-            {
-                var minDate = db.Productions.Min(p => p.DateProduction);
-                var maxDate = db.Productions.Max(p => p.DateProduction);
+            dtpFrom.Value = new DateTime(2026, 4, 1);
+            dtpTo.Value = DateTime.Today;
 
-                dtpFrom.Value = minDate.ToDateTime(TimeOnly.MinValue);
-                dtpTo.Value = maxDate.ToDateTime(TimeOnly.MinValue);
+            // Если кнопок нет - поднимаем таблицу вверх
+            if (!canEdit)
+            {
+                panelButtons.Visible = false;
+                dgvData.Top = panelFilter.Bottom;
+                dgvData.Height = this.ClientSize.Height - panelFilter.Bottom;
             }
         }
 
@@ -86,46 +95,59 @@ namespace HrizotilApp.Forms
                     if (selectedProduct != null && selectedProduct != "Все марки")
                         query = query.Where(p => p.IdProduct == selectedProduct);
 
-                    // Получаем общее количество строк (групп)
+                    // Получаем общее количество записей (групп)
                     totalRecords = query
-                        .GroupBy(p => new { p.DateProduction, p.IdProduct })
+                        .GroupBy(p => new { p.DateProduction, p.IdProduct })  // ← БЕЗ Id
                         .Count();
 
                     totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
                     if (totalPages == 0) totalPages = 1;
 
-                    if (currentPage > totalPages)
-                        currentPage = totalPages;
-                    if (currentPage < 1)
-                        currentPage = 1;
+                    if (currentPage > totalPages) currentPage = totalPages;
+                    if (currentPage < 1) currentPage = 1;
 
-                    // Получаем данные с пагинацией
+                    // Группировка по дате и марке - ОДНА СТРОКА НА ДЕНЬ
                     var data = query
-                        .GroupBy(p => new { p.DateProduction, p.IdProduct })
-                        .Select(g => new
-                        {
-                            Id = g.Min(p => p.Id),
-                            DateProduction = g.Key.DateProduction,
-                            IdProduct = g.Key.IdProduct,
-                            PlanShift1 = g.Where(x => x.Shift == 1).Sum(x => x.PlanQuantity),
-                            FactShift1 = g.Where(x => x.Shift == 1).Sum(x => x.FactQuantity),
-                            PlanShift2 = g.Where(x => x.Shift == 2).Sum(x => x.PlanQuantity),
-                            FactShift2 = g.Where(x => x.Shift == 2).Sum(x => x.FactQuantity),
-                            PlanShift3 = g.Where(x => x.Shift == 3).Sum(x => x.PlanQuantity),
-                            FactShift3 = g.Where(x => x.Shift == 3).Sum(x => x.FactQuantity),
-                            DailyPlan = g.Sum(x => x.PlanQuantity),
-                            DailyFact = g.Sum(x => x.FactQuantity),
-                            Deviation = g.Sum(x => x.FactQuantity) - g.Sum(x => x.PlanQuantity)
-                        })
-                        .OrderByDescending(x => x.DateProduction)
-                        .ThenBy(x => x.IdProduct)
-                        .Skip((currentPage - 1) * pageSize)
-                        .Take(pageSize)
-                        .ToList();
+                         .GroupBy(p => new { p.DateProduction, p.IdProduct })
+                         .Select(g => new
+                         {
+                             Id = g.Min(p => p.Id),
+                             DateProduction = g.Key.DateProduction,
+                             IdProduct = g.Key.IdProduct,
+                             PlanShift1 = g.Where(x => x.Shift == 1).Sum(x => x.PlanQuantity),
+                             FactShift1 = g.Where(x => x.Shift == 1).Sum(x => x.FactQuantity),
+                             PlanShift2 = g.Where(x => x.Shift == 2).Sum(x => x.PlanQuantity),
+                             FactShift2 = g.Where(x => x.Shift == 2).Sum(x => x.FactQuantity),
+                             PlanShift3 = g.Where(x => x.Shift == 3).Sum(x => x.PlanQuantity),
+                             FactShift3 = g.Where(x => x.Shift == 3).Sum(x => x.FactQuantity),
+                             DailyPlan = g.Sum(x => x.PlanQuantity),
+                             DailyFact = g.Sum(x => x.FactQuantity),
+                             Deviation = g.Sum(x => x.FactQuantity) - g.Sum(x => x.PlanQuantity)
+                         })
+                         .OrderByDescending(x => x.DateProduction)
+                         .ThenBy(x => x.IdProduct)
+                         .Skip((currentPage - 1) * pageSize)
+                         .Take(pageSize)
+                         .ToList();
 
-                    dgvData.DataSource = data;
+                    var displayData = data.Select(d => new
+                    {
+                        d.Id,
+                        d.DateProduction,
+                        d.IdProduct,
+                        PlanShift1 = d.PlanShift1 == 0 ? "—" : d.PlanShift1.ToString(),
+                        FactShift1 = d.FactShift1 == 0 ? "—" : d.FactShift1.ToString(),
+                        PlanShift2 = d.PlanShift2 == 0 ? "—" : d.PlanShift2.ToString(),
+                        FactShift2 = d.FactShift2 == 0 ? "—" : d.FactShift2.ToString(),
+                        PlanShift3 = d.PlanShift3 == 0 ? "—" : d.PlanShift3.ToString(),
+                        FactShift3 = d.FactShift3 == 0 ? "—" : d.FactShift3.ToString(),
+                        DailyPlan = d.DailyPlan,
+                        DailyFact = d.DailyFact,
+                        Deviation = d.Deviation
+                    }).ToList();
+
+                    dgvData.DataSource = displayData;
                     SetupColumns();
-                    ApplyRowStyles();
                     UpdatePaginationControls();
                 }
             }
@@ -143,7 +165,7 @@ namespace HrizotilApp.Forms
             btnNext.Enabled = currentPage < totalPages;
             btnLast.Enabled = currentPage < totalPages;
 
-            lblPageInfo.Text = $"Страница {currentPage} из {totalPages} | Всего: {totalRecords} записей";
+            lblPageInfo.Text = $"Страница {currentPage} из {(totalPages == 0 ? 1 : totalPages)}";
         }
 
         private void BtnFirst_Click(object sender, EventArgs e)
@@ -217,20 +239,28 @@ namespace HrizotilApp.Forms
 
         private void ApplyRowStyles()
         {
+            if (dgvData == null || dgvData.Rows.Count == 0) return;
+            if (!dgvData.Columns.Contains("Deviation")) return;
+
             foreach (DataGridViewRow row in dgvData.Rows)
             {
-                if (row.Cells["Deviation"].Value != null)
+                if (row.IsNewRow) continue;
+
+                var deviationCell = row.Cells["Deviation"];
+                if (deviationCell != null && deviationCell.Value != null)
                 {
-                    decimal diff = Convert.ToDecimal(row.Cells["Deviation"].Value);
-                    if (diff < 0)
+                    if (decimal.TryParse(deviationCell.Value.ToString(), out decimal diff))
                     {
-                        row.Cells["Deviation"].Style.BackColor = Color.LightCoral;
-                        row.Cells["Deviation"].Style.Font = new Font(dgvData.Font, FontStyle.Bold);
-                    }
-                    else
-                    {
-                        row.Cells["Deviation"].Style.BackColor = Color.Empty;
-                        row.Cells["Deviation"].Style.Font = new Font(dgvData.Font, FontStyle.Regular);
+                        if (diff < 0)
+                        {
+                            deviationCell.Style.BackColor = Color.LightCoral;
+                            deviationCell.Style.Font = new Font(dgvData.Font, FontStyle.Bold);
+                        }
+                        else
+                        {
+                            deviationCell.Style.BackColor = Color.Empty;
+                            deviationCell.Style.Font = new Font(dgvData.Font, FontStyle.Regular);
+                        }
                     }
                 }
             }
@@ -280,13 +310,17 @@ namespace HrizotilApp.Forms
                 return;
             }
 
-            int id = Convert.ToInt32(dgvData.SelectedRows[0].Cells["Id"].Value);
+            var row = dgvData.SelectedRows[0];
+
+            // Получаем Id записи
+            int id = Convert.ToInt32(row.Cells["Id"].Value);
 
             using (var db = new HrizotilAccountingDbContext())
             {
                 var production = db.Productions.Find(id);
                 if (production != null)
                 {
+                    // ОТКРЫВАЕМ РЕДАКТИРОВАНИЕ СРАЗУ
                     using (var form = new FormProductionEdit(production))
                     {
                         if (form.ShowDialog() == DialogResult.OK)
@@ -294,6 +328,11 @@ namespace HrizotilApp.Forms
                             LoadData();
                         }
                     }
+                }
+                else
+                {
+                    MessageBox.Show("Запись не найдена!", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -307,22 +346,35 @@ namespace HrizotilApp.Forms
                 return;
             }
 
-            int id = Convert.ToInt32(dgvData.SelectedRows[0].Cells["Id"].Value);
+            var row = dgvData.SelectedRows[0];
 
-            DialogResult result = MessageBox.Show("Вы действительно хотите удалить эту запись?",
-                "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            // Получаем дату и марку
+            DateOnly dateOnly = (DateOnly)row.Cells["DateProduction"].Value;
+            DateTime date = dateOnly.ToDateTime(TimeOnly.MinValue);
+            string productId = row.Cells["IdProduct"].Value.ToString();
 
-            if (result == DialogResult.Yes)
+            using (var db = new HrizotilAccountingDbContext())
             {
-                using (var db = new HrizotilAccountingDbContext())
+                var productions = db.Productions
+                    .Where(p => p.DateProduction == DateOnly.FromDateTime(date) &&
+                                p.IdProduct == productId)
+                    .OrderBy(p => p.Shift)
+                    .ToList();
+
+                if (!productions.Any())
                 {
-                    var production = db.Productions.Find(id);
-                    if (production != null)
+                    MessageBox.Show("Нет записей для удаления!", "Информация",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                // Открываем форму выбора смен для удаления
+                using (var deleteForm = new FormDeleteShifts(date, productId, productions))
+                {
+                    if (deleteForm.ShowDialog() == DialogResult.OK)
                     {
-                        db.Productions.Remove(production);
-                        db.SaveChanges();
                         LoadData();
-                        MessageBox.Show("Запись успешно удалена!",
+                        MessageBox.Show("Выбранные смены удалены!",
                             "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }

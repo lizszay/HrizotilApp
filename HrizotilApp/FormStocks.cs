@@ -11,103 +11,91 @@ namespace HrizotilApp.Forms
         {
             InitializeComponent();
             currentUser = user;
-            lblUserName.Text = currentUser?.FullName ?? "Гость";
+
+            ConfigureUI();
+            dtpDate.Value = DateTime.Today;
             LoadData();
             DataGridViewStyle.ApplyStyle(dgvData);
+        }
+
+        private void ConfigureUI()
+        {
+            if (currentUser != null)
+                lblUserName.Text = currentUser.FullName;
+            else
+                lblUserName.Text = "Гость";
         }
 
         private void LoadData()
         {
             DateTime selectedDate = dtpDate.Value.Date;
-            DateOnly stockDate = DateOnly.FromDateTime(selectedDate);
 
             using (var db = new HrizotilAccountingDbContext())
             {
-                // Получаем начальные остатки (на 01.04.2026)
+                // 1. Начальные остатки на 01.04.2026 (суммируем по марке)
                 var initialStocks = db.Remains
                     .Where(r => r.DateStock == new DateOnly(2026, 4, 1))
-                    .ToDictionary(r => (r.IdWarehouse, r.IdProduct), r => r.Quantity);
+                    .GroupBy(r => r.IdProduct)
+                    .Select(g => new { Product = g.Key, Total = g.Sum(x => x.Quantity) })
+                    .ToDictionary(x => x.Product, x => x.Total);
 
-                // Получаем выработку до выбранной даты
+                // 2. Выработка до выбранной даты
                 var production = db.Productions
-                    .Where(p => p.DateProduction <= stockDate)
-                    .GroupBy(p => new { p.IdProduct })
-                    .Select(g => new
-                    {
-                        ProductCode = g.Key.IdProduct,
-                        TotalProduced = g.Sum(x => x.FactQuantity)
-                    })
-                    .ToDictionary(x => x.ProductCode, x => x.TotalProduced);
+                    .Where(p => p.DateProduction <= DateOnly.FromDateTime(selectedDate))
+                    .GroupBy(p => p.IdProduct)
+                    .Select(g => new { Product = g.Key, Total = g.Sum(x => x.FactQuantity) })
+                    .ToDictionary(x => x.Product, x => x.Total);
 
-                // Получаем отгрузки до выбранной даты (со склада 1)
+                // 3. Отгрузки до выбранной даты (со склада 1)
                 var shipments = db.Shipments
-                    .Where(s => s.DateShipment <= stockDate && s.IdFromWarehouse == 1)
-                    .GroupBy(s => new { s.IdProduct })
-                    .Select(g => new
-                    {
-                        ProductCode = g.Key.IdProduct,
-                        TotalShipped = g.Sum(x => x.Quantity)
-                    })
-                    .ToDictionary(x => x.ProductCode, x => x.TotalShipped);
+                    .Where(s => s.DateShipment <= DateOnly.FromDateTime(selectedDate) && s.IdFromWarehouse == 1)
+                    .GroupBy(s => s.IdProduct)
+                    .Select(g => new { Product = g.Key, Total = g.Sum(x => x.Quantity) })
+                    .ToDictionary(x => x.Product, x => x.Total);
 
-                // Получаем все склады и продукты
-                var warehouses = db.Warehouses.ToList();
-                var products = db.Products.ToList();
+                // 4. Все марки
+                var products = db.Products.OrderBy(p => p.Id).ToList();
 
                 var result = new List<StockRow>();
 
-                foreach (var warehouse in warehouses)
+                foreach (var product in products)
                 {
-                    foreach (var product in products)
+                    decimal initial = initialStocks.ContainsKey(product.Id) ? initialStocks[product.Id] : 0;
+                    decimal produced = production.ContainsKey(product.Id) ? production[product.Id] : 0;
+                    decimal shipped = shipments.ContainsKey(product.Id) ? shipments[product.Id] : 0;
+                    decimal remain = initial + produced - shipped;
+
+                    // Показываем только если остаток не равен нулю
+                    if (remain != 0)
                     {
-                        decimal initial = 0;
-                        if (initialStocks.ContainsKey((warehouse.Id, product.Id)))
-                            initial = initialStocks[(warehouse.Id, product.Id)];
-
-                        decimal produced = 0;
-                        if (production.ContainsKey(product.Id))
-                            produced = production[product.Id];
-
-                        decimal shipped = 0;
-                        if (warehouse.Id == 1 && shipments.ContainsKey(product.Id))
-                            shipped = shipments[product.Id];
-
-                        decimal current = initial + produced - shipped;
-
-                        if (current != 0 || initial != 0 || produced != 0 || shipped != 0)
+                        result.Add(new StockRow
                         {
-                            result.Add(new StockRow
-                            {
-                                WarehouseName = warehouse.WarehouseName,
-                                ProductCode = product.Id,
-                                InitialStock = initial,
-                                Produced = produced,
-                                Shipped = shipped,
-                                CurrentStock = current
-                            });
-                        }
+                            Product = product.Id,
+                            Initial = initial,
+                            Produced = produced,
+                            Shipped = shipped,
+                            Remain = remain
+                        });
                     }
                 }
 
-                dgvData.DataSource = result.OrderBy(r => r.WarehouseName).ThenBy(r => r.ProductCode).ToList();
+                dgvData.DataSource = result.OrderBy(r => r.Product).ToList();
                 SetupColumns();
             }
         }
 
         private void SetupColumns()
         {
-            if (dgvData.Columns.Contains("WarehouseName"))
-                dgvData.Columns["WarehouseName"].HeaderText = "Склад";
-            if (dgvData.Columns.Contains("ProductCode"))
-                dgvData.Columns["ProductCode"].HeaderText = "Марка";
-            if (dgvData.Columns.Contains("InitialStock"))
-                dgvData.Columns["InitialStock"].HeaderText = "Нач. остаток, т";
+            if (dgvData.Columns.Contains("Product"))
+                dgvData.Columns["Product"].HeaderText = "Марка";
+            if (dgvData.Columns.Contains("Initial"))
+                dgvData.Columns["Initial"].HeaderText = "Нач.остаток";
             if (dgvData.Columns.Contains("Produced"))
-                dgvData.Columns["Produced"].HeaderText = "Выработка, т";
+                dgvData.Columns["Produced"].HeaderText = "Выработка";
             if (dgvData.Columns.Contains("Shipped"))
-                dgvData.Columns["Shipped"].HeaderText = "Отгрузка, т";
-            if (dgvData.Columns.Contains("CurrentStock"))
-                dgvData.Columns["CurrentStock"].HeaderText = "Остаток, т";
+                dgvData.Columns["Shipped"].HeaderText = "Отгрузки";
+            if (dgvData.Columns.Contains("Remain"))
+                dgvData.Columns["Remain"].HeaderText = "Остаток";
         }
 
         private void BtnShow_Click(object sender, EventArgs e)
@@ -128,12 +116,11 @@ namespace HrizotilApp.Forms
 
         private class StockRow
         {
-            public string WarehouseName { get; set; }
-            public string ProductCode { get; set; }
-            public decimal InitialStock { get; set; }
+            public string Product { get; set; }
+            public decimal Initial { get; set; }
             public decimal Produced { get; set; }
             public decimal Shipped { get; set; }
-            public decimal CurrentStock { get; set; }
+            public decimal Remain { get; set; }
         }
     }
 }

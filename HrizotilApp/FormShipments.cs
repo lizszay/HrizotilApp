@@ -20,6 +20,13 @@ namespace HrizotilApp.Forms
             LoadData();
 
             DataGridViewStyle.ApplyStyle(dgvData);
+
+            this.MinimumSize = new Size(1000, 550);
+
+            dgvData.DataBindingComplete += (s, e) =>
+            {
+                DataGridViewStyle.SetColumnMinimumWidth(dgvData);
+            };
         }
 
         private void ConfigureUI()
@@ -30,8 +37,6 @@ namespace HrizotilApp.Forms
                 lblUserName.Text = "Гость";
 
             int userRole = currentUser?.IdRole ?? 1;
-
-            // Редактировать: Кладовщик (3) и Админ (5)
             bool canEdit = (userRole == 3 || userRole == 5);
 
             btnAdd.Visible = canEdit;
@@ -39,7 +44,15 @@ namespace HrizotilApp.Forms
             btnDelete.Visible = canEdit;
 
             dtpFrom.Value = new DateTime(2026, 4, 1);
-            dtpTo.Value = new DateTime(2026, 5, 21);
+            dtpTo.Value = DateTime.Today;
+
+            // Если кнопок нет - поднимаем таблицу вверх
+            if (!canEdit)
+            {
+                panelButtons.Visible = false;
+                dgvData.Top = panelFilter.Bottom;
+                dgvData.Height = this.ClientSize.Height - panelFilter.Bottom;
+            }
         }
 
         private void LoadProductsFilter()
@@ -76,6 +89,7 @@ namespace HrizotilApp.Forms
                 var data = query
                     .Select(s => new
                     {
+                        s.Id,  
                         shipment_date = s.DateShipment,
                         from_warehouse = s.FromWarehouse.WarehouseName,
                         to_warehouse = s.ToWarehouse.WarehouseName,
@@ -93,6 +107,8 @@ namespace HrizotilApp.Forms
 
         private void SetupColumns()
         {
+            if (dgvData.Columns.Contains("Id"))
+                dgvData.Columns["Id"].Visible = false;
             if (dgvData.Columns.Contains("shipment_date"))
                 dgvData.Columns["shipment_date"].HeaderText = "Дата";
             if (dgvData.Columns.Contains("from_warehouse"))
@@ -130,17 +146,71 @@ namespace HrizotilApp.Forms
 
         private void BtnAdd_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Добавление отгрузки (в разработке)");
+            using (var form = new FormShipmentEdit(null))
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    LoadData();
+                }
+            }
         }
 
         private void BtnEdit_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Редактирование отгрузки (в разработке)");
+            if (dgvData.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Выберите запись для редактирования!",
+                    "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int id = Convert.ToInt32(dgvData.SelectedRows[0].Cells["Id"].Value);
+
+            using (var db = new HrizotilAccountingDbContext())
+            {
+                var shipment = db.Shipments.Find(id);
+                if (shipment != null)
+                {
+                    using (var form = new FormShipmentEdit(shipment))
+                    {
+                        if (form.ShowDialog() == DialogResult.OK)
+                        {
+                            LoadData();
+                        }
+                    }
+                }
+            }
         }
 
         private void BtnDelete_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Удаление отгрузки (в разработке)");
+            if (dgvData.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Выберите запись для удаления!",
+                    "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int id = Convert.ToInt32(dgvData.SelectedRows[0].Cells["Id"].Value);
+
+            DialogResult result = MessageBox.Show("Вы действительно хотите удалить эту запись?",
+                "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                using (var db = new HrizotilAccountingDbContext())
+                {
+                    var shipment = db.Shipments.Find(id);
+                    if (shipment != null)
+                    {
+                        db.Shipments.Remove(shipment);
+                        db.SaveChanges();
+                        LoadData();
+                        MessageBox.Show("Запись успешно удалена!",
+                            "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
         }
     }
 }

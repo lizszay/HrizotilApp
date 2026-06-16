@@ -32,8 +32,6 @@
         private Label lblPageInfo;
         private ComboBox cmbPageSize;
 
-
-
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -60,10 +58,22 @@
             btnDelete = new Button();
             btnEdit = new Button();
             dgvData = new DataGridView();
+            panelPagination = new Panel();
+            tablePagination = new TableLayoutPanel();
+            flowPagination = new FlowLayoutPanel();
+            btnFirst = new Button();
+            btnPrev = new Button();
+            lblPageInfo = new Label();
+            btnNext = new Button();
+            btnLast = new Button();
+            cmbPageSize = new ComboBox();
             panelTop.SuspendLayout();
             panelFilter.SuspendLayout();
             panelButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvData).BeginInit();
+            panelPagination.SuspendLayout();
+            tablePagination.SuspendLayout();
+            flowPagination.SuspendLayout();
             SuspendLayout();
             // 
             // panelTop
@@ -77,7 +87,7 @@
             panelTop.Location = new Point(0, 0);
             panelTop.Name = "panelTop";
             panelTop.Padding = new Padding(10, 5, 10, 5);
-            panelTop.Size = new Size(1000, 50);
+            panelTop.Size = new Size(1200, 50);
             panelTop.TabIndex = 3;
             // 
             // btnBack
@@ -98,7 +108,7 @@
             // 
             lblUserName.Dock = DockStyle.Right;
             lblUserName.Font = new Font("Times New Roman", 12F);
-            lblUserName.Location = new Point(710, 5);
+            lblUserName.Location = new Point(900, 5);
             lblUserName.Name = "lblUserName";
             lblUserName.Size = new Size(180, 40);
             lblUserName.TabIndex = 1;
@@ -112,9 +122,9 @@
             btnLogout.FlatAppearance.BorderSize = 0;
             btnLogout.FlatStyle = FlatStyle.Flat;
             btnLogout.Font = new Font("Times New Roman", 12F);
-            btnLogout.Location = new Point(890, 5);
+            btnLogout.Location = new Point(1080, 5);
             btnLogout.Name = "btnLogout";
-            btnLogout.Size = new Size(100, 40);
+            btnLogout.Size = new Size(110, 40);
             btnLogout.TabIndex = 2;
             btnLogout.Text = "Выход";
             btnLogout.UseVisualStyleBackColor = false;
@@ -126,7 +136,7 @@
             lblTitle.Font = new Font("Times New Roman", 16F, FontStyle.Bold);
             lblTitle.Location = new Point(10, 5);
             lblTitle.Name = "lblTitle";
-            lblTitle.Size = new Size(980, 40);
+            lblTitle.Size = new Size(1180, 40);
             lblTitle.TabIndex = 3;
             lblTitle.Text = "Выработка";
             lblTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -143,7 +153,7 @@
             panelFilter.Location = new Point(0, 50);
             panelFilter.Name = "panelFilter";
             panelFilter.Padding = new Padding(10, 5, 10, 5);
-            panelFilter.Size = new Size(1000, 45);
+            panelFilter.Size = new Size(1200, 45);
             panelFilter.TabIndex = 2;
             // 
             // dtpFrom
@@ -203,7 +213,7 @@
             panelButtons.Location = new Point(0, 95);
             panelButtons.Name = "panelButtons";
             panelButtons.Padding = new Padding(10, 5, 10, 5);
-            panelButtons.Size = new Size(1000, 55);
+            panelButtons.Size = new Size(1200, 55);
             panelButtons.TabIndex = 1;
             // 
             // btnAdd
@@ -212,8 +222,7 @@
             btnAdd.BackColor = Color.LightGreen;
             btnAdd.FlatAppearance.BorderSize = 0;
             btnAdd.FlatStyle = FlatStyle.Flat;
-            btnAdd.Location = new Point(243, 6);
-            btnAdd.Margin = new Padding(4, 3, 4, 3);
+            btnAdd.Location = new Point(350, 6);
             btnAdd.Name = "btnAdd";
             btnAdd.Size = new Size(154, 39);
             btnAdd.TabIndex = 4;
@@ -227,8 +236,7 @@
             btnDelete.BackColor = Color.LightCoral;
             btnDelete.FlatAppearance.BorderSize = 0;
             btnDelete.FlatStyle = FlatStyle.Flat;
-            btnDelete.Location = new Point(603, 6);
-            btnDelete.Margin = new Padding(4, 3, 4, 3);
+            btnDelete.Location = new Point(710, 6);
             btnDelete.Name = "btnDelete";
             btnDelete.Size = new Size(154, 39);
             btnDelete.TabIndex = 6;
@@ -242,8 +250,7 @@
             btnEdit.BackColor = Color.LightBlue;
             btnEdit.FlatAppearance.BorderSize = 0;
             btnEdit.FlatStyle = FlatStyle.Flat;
-            btnEdit.Location = new Point(410, 6);
-            btnEdit.Margin = new Padding(4, 3, 4, 3);
+            btnEdit.Location = new Point(517, 6);
             btnEdit.Name = "btnEdit";
             btnEdit.Size = new Size(180, 39);
             btnEdit.TabIndex = 5;
@@ -267,14 +274,126 @@
             dgvData.ReadOnly = true;
             dgvData.RowHeadersVisible = false;
             dgvData.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvData.Size = new Size(1000, 500);
+            dgvData.Size = new Size(1200, 445);
             dgvData.TabIndex = 0;
+            // 
+            // panelPagination
+            // 
+            panelPagination.BackColor = Color.White;
+            panelPagination.Controls.Add(tablePagination);
+            panelPagination.Dock = DockStyle.Bottom;
+            panelPagination.Location = new Point(0, 605);
+            panelPagination.Name = "panelPagination";
+            panelPagination.Size = new Size(1200, 45);
+            panelPagination.TabIndex = 4;
+            // 
+            // tablePagination
+            // 
+            tablePagination.ColumnCount = 1;
+            tablePagination.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tablePagination.Controls.Add(flowPagination, 0, 0);
+            tablePagination.Dock = DockStyle.Fill;
+            tablePagination.Location = new Point(0, 0);
+            tablePagination.Name = "tablePagination";
+            tablePagination.RowCount = 1;
+            tablePagination.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tablePagination.Size = new Size(1200, 45);
+            tablePagination.TabIndex = 0;
+            // 
+            // flowPagination
+            // 
+            flowPagination.Anchor = AnchorStyles.None;
+            flowPagination.AutoSize = true;
+            flowPagination.Controls.Add(btnFirst);
+            flowPagination.Controls.Add(btnPrev);
+            flowPagination.Controls.Add(lblPageInfo);
+            flowPagination.Controls.Add(btnNext);
+            flowPagination.Controls.Add(btnLast);
+            flowPagination.Controls.Add(cmbPageSize);
+            flowPagination.Location = new Point(354, 3);
+            flowPagination.Name = "flowPagination";
+            flowPagination.Size = new Size(491, 38);
+            flowPagination.TabIndex = 0;
+            // 
+            // btnFirst
+            // 
+            btnFirst.BackColor = Color.LightGray;
+            btnFirst.FlatStyle = FlatStyle.Flat;
+            btnFirst.Font = new Font("Times New Roman", 10F, FontStyle.Bold);
+            btnFirst.Location = new Point(3, 3);
+            btnFirst.Name = "btnFirst";
+            btnFirst.Size = new Size(40, 32);
+            btnFirst.TabIndex = 0;
+            btnFirst.Text = "⏮";
+            btnFirst.UseVisualStyleBackColor = false;
+            btnFirst.Click += BtnFirst_Click;
+            // 
+            // btnPrev
+            // 
+            btnPrev.BackColor = Color.LightGray;
+            btnPrev.FlatStyle = FlatStyle.Flat;
+            btnPrev.Font = new Font("Times New Roman", 10F, FontStyle.Bold);
+            btnPrev.Location = new Point(49, 3);
+            btnPrev.Name = "btnPrev";
+            btnPrev.Size = new Size(85, 32);
+            btnPrev.TabIndex = 1;
+            btnPrev.Text = "◀ Назад";
+            btnPrev.UseVisualStyleBackColor = false;
+            btnPrev.Click += BtnPrev_Click;
+            // 
+            // lblPageInfo
+            // 
+            lblPageInfo.Font = new Font("Times New Roman", 11F);
+            lblPageInfo.Location = new Point(140, 0);
+            lblPageInfo.Name = "lblPageInfo";
+            lblPageInfo.Size = new Size(150, 32);
+            lblPageInfo.TabIndex = 2;
+            lblPageInfo.Text = "Страница 1 из 1";
+            lblPageInfo.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // btnNext
+            // 
+            btnNext.BackColor = Color.LightGray;
+            btnNext.FlatStyle = FlatStyle.Flat;
+            btnNext.Font = new Font("Times New Roman", 10F, FontStyle.Bold);
+            btnNext.Location = new Point(296, 3);
+            btnNext.Name = "btnNext";
+            btnNext.Size = new Size(85, 32);
+            btnNext.TabIndex = 3;
+            btnNext.Text = "Вперед ▶";
+            btnNext.UseVisualStyleBackColor = false;
+            btnNext.Click += BtnNext_Click;
+            // 
+            // btnLast
+            // 
+            btnLast.BackColor = Color.LightGray;
+            btnLast.FlatStyle = FlatStyle.Flat;
+            btnLast.Font = new Font("Times New Roman", 10F, FontStyle.Bold);
+            btnLast.Location = new Point(387, 3);
+            btnLast.Name = "btnLast";
+            btnLast.Size = new Size(40, 32);
+            btnLast.TabIndex = 4;
+            btnLast.Text = "⏭";
+            btnLast.UseVisualStyleBackColor = false;
+            btnLast.Click += BtnLast_Click;
+            // 
+            // cmbPageSize
+            // 
+            cmbPageSize.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbPageSize.Font = new Font("Times New Roman", 11F);
+            cmbPageSize.Items.AddRange(new object[] { "15", "20", "30", "50" });
+            cmbPageSize.Location = new Point(433, 3);
+            cmbPageSize.Name = "cmbPageSize";
+            cmbPageSize.Size = new Size(55, 25);
+            cmbPageSize.TabIndex = 5;
+            cmbPageSize.SelectedIndexChanged += CmbPageSize_SelectedIndexChanged;
             // 
             // FormProductions
             // 
             AutoScaleDimensions = new SizeF(9F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1000, 650);
+            ClientSize = new Size(1200, 650);
+            Controls.Add(panelPagination);
             Controls.Add(dgvData);
             Controls.Add(panelButtons);
             Controls.Add(panelFilter);
@@ -288,88 +407,14 @@
             panelFilter.PerformLayout();
             panelButtons.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvData).EndInit();
-
-            // panelPagination
-            this.panelPagination = new Panel();
-            this.panelPagination.Dock = DockStyle.Bottom;
-            this.panelPagination.Height = 45;
-            this.panelPagination.BackColor = Color.White;
-            this.panelPagination.Padding = new Padding(10, 5, 10, 5);
-
-            // btnFirst
-            this.btnFirst = new Button();
-            this.btnFirst.Text = "⏮ Первая";
-            this.btnFirst.Size = new Size(85, 32);
-            this.btnFirst.FlatStyle = FlatStyle.Flat;
-            this.btnFirst.BackColor = Color.LightGray;
-            this.btnFirst.Click += BtnFirst_Click;
-
-            // btnPrev
-            this.btnPrev = new Button();
-            this.btnPrev.Text = "◀ Назад";
-            this.btnPrev.Size = new Size(85, 32);
-            this.btnPrev.FlatStyle = FlatStyle.Flat;
-            this.btnPrev.BackColor = Color.LightGray;
-            this.btnPrev.Click += BtnPrev_Click;
-
-            // btnNext
-            this.btnNext = new Button();
-            this.btnNext.Text = "Вперед ▶";
-            this.btnNext.Size = new Size(85, 32);
-            this.btnNext.FlatStyle = FlatStyle.Flat;
-            this.btnNext.BackColor = Color.LightGray;
-            this.btnNext.Click += BtnNext_Click;
-
-            // btnLast
-            this.btnLast = new Button();
-            this.btnLast.Text = "Последняя ⏩";
-            this.btnLast.Size = new Size(95, 32);
-            this.btnLast.FlatStyle = FlatStyle.Flat;
-            this.btnLast.BackColor = Color.LightGray;
-            this.btnLast.Click += BtnLast_Click;
-
-            // lblPageInfo
-            this.lblPageInfo = new Label();
-            this.lblPageInfo.Text = "Страница 1 из 1";
-            this.lblPageInfo.Size = new Size(150, 32);
-            this.lblPageInfo.TextAlign = ContentAlignment.MiddleCenter;
-            this.lblPageInfo.Font = new Font("Times New Roman", 11F);
-
-            // cmbPageSize
-            this.cmbPageSize = new ComboBox();
-            this.cmbPageSize.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.cmbPageSize.Items.AddRange(new object[] { "15", "20", "30", "40", "50" });
-            this.cmbPageSize.SelectedIndex = 1;
-            this.cmbPageSize.Size = new Size(65, 27);
-            this.cmbPageSize.Font = new Font("Times New Roman", 11F);
-            this.cmbPageSize.SelectedIndexChanged += CmbPageSize_SelectedIndexChanged;
-
-            // Размещаем элементы на панели
-            this.panelPagination.Controls.Add(this.btnFirst);
-            this.panelPagination.Controls.Add(this.btnPrev);
-            this.panelPagination.Controls.Add(this.lblPageInfo);
-            this.panelPagination.Controls.Add(this.btnNext);
-            this.panelPagination.Controls.Add(this.btnLast);
-            this.panelPagination.Controls.Add(this.cmbPageSize);
-
-            // Позиционирование
-            this.btnFirst.Location = new Point(10, 6);
-            this.btnPrev.Location = new Point(100, 6);
-            this.lblPageInfo.Location = new Point(190, 6);
-            this.btnNext.Location = new Point(345, 6);
-            this.btnLast.Location = new Point(435, 6);
-            this.cmbPageSize.Location = new Point(540, 7);
-
-            // Добавляем панель на форму
-            this.Controls.Add(this.panelPagination);
-
-            // Переносим dgvData наверх (чтобы не перекрывала пагинацию)
-            this.dgvData.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            this.dgvData.Location = new Point(0, 150);
-            this.dgvData.Size = new Size(1000, 455); // Уменьшаем высоту, чтобы уместилась пагинация
-
+            panelPagination.ResumeLayout(false);
+            tablePagination.ResumeLayout(false);
+            tablePagination.PerformLayout();
+            flowPagination.ResumeLayout(false);
             ResumeLayout(false);
-
         }
+
+        private TableLayoutPanel tablePagination;
+        private FlowLayoutPanel flowPagination;
     }
 }

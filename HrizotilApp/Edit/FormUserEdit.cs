@@ -20,6 +20,8 @@ namespace HrizotilApp.Forms
                 editingUser = new User();
                 this.Text = "Добавление пользователя";
                 txtPassword.Enabled = true;
+                txtLogin.Enabled = true;  // ← Логин доступен
+                txtLogin.ReadOnly = false;
             }
             else
             {
@@ -27,6 +29,8 @@ namespace HrizotilApp.Forms
                 editingUser = user;
                 this.Text = "Редактирование пользователя";
                 LoadUserData();
+                txtLogin.Enabled = true;   // ← Логин доступен для изменения
+                txtLogin.ReadOnly = false;
                 txtPassword.Text = "";
                 txtPassword.Enabled = true;
             }
@@ -115,6 +119,7 @@ namespace HrizotilApp.Forms
             }
             else
             {
+                // При редактировании проверяем, не занят ли логин другим пользователем
                 if (IsLoginExists(login, editingUser.Id))
                 {
                     MessageBox.Show($"Пользователь с логином '{login}' уже существует!",
@@ -143,7 +148,7 @@ namespace HrizotilApp.Forms
                         var user = db.Users.Find(editingUser.Id);
                         if (user != null)
                         {
-                            user.Login = login;
+                            user.Login = login;  // ← Логин обновляется
                             user.FullName = fullName;
                             user.IdRole = roleId;
                             if (!string.IsNullOrWhiteSpace(txtPassword.Text))
